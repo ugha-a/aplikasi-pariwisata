@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\Admin\CategoryController;
 
 
 /*
@@ -25,7 +26,7 @@ Route::group(['middleware' => ['is_admin','auth'], 'prefix' => 'admin', 'as' => 
     Route::resource('travel_packages', \App\Http\Controllers\Admin\TravelPackageController::class)->except('show');
     Route::resource('travel_packages.galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['create', 'index','show']);
     // categories
-    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->except('show');
+    // Route::resource('categories', CategoryController::class)->except('show');
     // locations
     Route::resource('locations', \App\Http\Controllers\Admin\LocationController::class)->except('show');
     // profile

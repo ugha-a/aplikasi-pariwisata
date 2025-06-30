@@ -46,7 +46,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.locations.index') }}" class="nav-link">
                     <i class='fas fa-map-marker-alt' style='font-size:24px'></i>
                     <p>
                         {{ __(' Locations') }}
