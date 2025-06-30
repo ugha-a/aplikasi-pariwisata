@@ -39,12 +39,12 @@
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide">
-                <img src="{{ asset('frontend/assets/img/hero.jpg') }}" class="islands__bg" alt="Sulawesi Tenggara" />
+                <img src="{{ asset('frontend/assets/img/hero.jpg') }}" class="islands__bg" alt="Sulawesi Selatan" />
                 <div class="bg__overlay">
                     <div class="islands__container container">
                         <div class="islands__data" style="z-index: 99; position: relative">
-                            <h1 class="islands__title">Sulawesi Tenggara</h1>
-                            <p class="islands__description">Selamat datang di wisata Sulawesi Tenggara</p>
+                            <h1 class="islands__title">Sulawesi TenggSelatanara</h1>
+                            <p class="islands__description">Selamat datang di wisata Sulawesi Selatan</p>
                         </div>
                     </div>
                 </div>
