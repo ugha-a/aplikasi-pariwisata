@@ -43,7 +43,7 @@
                 <div class="bg__overlay">
                     <div class="islands__container container">
                         <div class="islands__data" style="z-index: 99; position: relative">
-                            <h1 class="islands__title">Sulawesi TenggSelatanara</h1>
+                            <h1 class="islands__title">Sulawesi Selatan</h1>
                             <p class="islands__description">Selamat datang di wisata Sulawesi Selatan</p>
                         </div>
                     </div>
