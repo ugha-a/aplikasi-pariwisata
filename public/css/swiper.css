@@ -1,0 +1,26 @@
+.swiper,
+.swiper-slide {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.islands__bg {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.bg__overlay {
+    position: relative;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4); /* untuk efek overlay gelap */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
