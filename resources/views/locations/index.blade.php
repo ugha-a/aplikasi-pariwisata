@@ -29,18 +29,15 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        //jhdsijf
-
         const map = L.map('map').setView([-3.9917, 122.5120], 7);
-
+    
         const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-
-        // Data popup yang ingin ditampilkan
+    
         const popups = @json(
-        $locations->map(function($item) {
+            $locations->map(function($item) {
                 return [
                     floatval($item->lat), 
                     floatval($item->lag), 
@@ -51,16 +48,13 @@
             position: [item[0], item[1]],
             text: item[2]
         }));
-
-        console.log(popups); // debug
-
-
-
-
-        // Loop melalui array popups untuk menambahkan marker dan popup
+    
+        console.log(popups);
+    
         popups.forEach(popup => {
             const marker = L.marker(popup.position).addTo(map)
-                .bindPopup(popup.text);
+                .bindPopup(popup.text)
+                .openPopup(); // <-- auto tampilkan popup
         });
     </script>
 @endpush
