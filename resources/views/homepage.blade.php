@@ -1,6 +1,5 @@
 @extends('layouts.frontend')
 
-<<<<<<< HEAD
 {{-- @php
     function convertToIDR($amountInUSD)
     {
@@ -10,8 +9,6 @@
     }
 @endphp --}}
 
-=======
->>>>>>> 8ccba90dd2e1b862ec9ca804837a52cf7bd4450b
 <link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
 
 @section('content')
@@ -121,19 +118,11 @@
                     @foreach ($travel_packages as $travel_package)
                         <article class="popular__card swiper-slide">
                             <a href="{{ route('travel_package.show', $travel_package->slug) }}">
-<<<<<<< HEAD
                                 <img src="{{ Storage::url(optional($package->galleries->first())->images) }}" alt=""
                                     class="popular__img" />
                                 <div class="popular__data">
                                     <h2 class="popular__price">
                                         <span>Rp</span>{{ convertToIDR($travel_package->price) }}
-=======
-                                <img src="{{ Storage::url($travel_package?->galleries?->first()?->images) }}" alt=""
-                                    class="popular__img" />
-                                <div class="popular__data">
-                                    <h2 class="popular__price">
-                                        <span>Rp</span>{{ number_format($travel_package->price * 15000, 2, ',', '.') }}
->>>>>>> 8ccba90dd2e1b862ec9ca804837a52cf7bd4450b
                                     </h2>
                                     <h3 class="popular__title">
                                         {{ $travel_package->location }}
