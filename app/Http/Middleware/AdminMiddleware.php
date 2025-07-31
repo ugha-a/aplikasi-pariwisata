@@ -17,6 +17,7 @@ class AdminMiddleware
     {
         if(!auth()->user()->is_admin) {
             abort(403);
+            // return redirect()->route('logout');
         }
         return $next($request);
     }

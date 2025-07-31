@@ -1,13 +1,6 @@
 @extends('layouts.frontend')
 
-@php
-    function convertToIDR($amountInUSD)
-    {
-        $exchangeRate = 15000; // Contoh nilai tukar USD ke IDR
-        $amountInIDR = $amountInUSD * $exchangeRate;
-        return $amountInIDR;
-    }
-@endphp
+@dd(function_exists('convertToIDR'))
 
 @section('content')
     <!--==================== HOME ====================-->
@@ -42,7 +35,7 @@
                                 class="popular__img" />
                             <div class="popular__data">
                                 <h2 class="popular__price">
-                                    <span>Rp</span>{{ number_format(convertToIDR($travel_package->price), 2, ',', '.') }}
+                                    <span>Rp</span>{{ number_format($travel_package->price * 15000, 2, ',', '.') }}
                                 </h2>
                                 <h3 class="popular__title">{{ $travel_package->location }}</h3>
                                 <p class="popular__description">{{ $travel_package->type }}</p>

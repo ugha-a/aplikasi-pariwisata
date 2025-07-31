@@ -130,6 +130,7 @@
     @vite('resources/js/app.js')
     <!-- AdminLTE App -->
     <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     @yield('scripts')
     {{-- <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script> --}}

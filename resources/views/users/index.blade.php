@@ -27,6 +27,7 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th style="width: 1%"></th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -1,14 +1,5 @@
 @extends('layouts.frontend')
 
-@php
-    function convertToIDR($amountInUSD)
-    {
-        $exchangeRate = 15000; // Contoh nilai tukar USD ke IDR
-        $amountInIDR = $amountInUSD * $exchangeRate;
-        return $amountInIDR;
-    }
-@endphp
-
 <link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
 
 @section('content')
@@ -53,7 +44,7 @@
             <!-- Slide 2 -->
             @foreach ($travel_packages as $package)
                 <div class="swiper-slide">
-                    <img src="{{ Storage::url($package->galleries->first()->images) }}" class="islands__bg"
+                    <img src="{{ Storage::url($package->galleries?->first()?->images) }}" class="islands__bg"
                         alt="Wisata 2" />
                     <div class="bg__overlay">
                         <div class="islands__container container">
@@ -119,11 +110,11 @@
                     @foreach ($travel_packages as $travel_package)
                         <article class="popular__card swiper-slide">
                             <a href="{{ route('travel_package.show', $travel_package->slug) }}">
-                                <img src="{{ Storage::url($travel_package->galleries->first()->images) }}" alt=""
+                                <img src="{{ Storage::url($travel_package?->galleries?->first()?->images) }}" alt=""
                                     class="popular__img" />
                                 <div class="popular__data">
                                     <h2 class="popular__price">
-                                        <span>Rp</span>{{ number_format(convertToIDR($travel_package->price), 2, ',', '.') }}
+                                        <span>Rp</span>{{ number_format($travel_package->price * 15000, 2, ',', '.') }}
                                     </h2>
                                     <h3 class="popular__title">
                                         {{ $travel_package->location }}
