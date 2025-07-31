@@ -14,14 +14,14 @@
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}" />
     @stack('style-alt')
-    <title>Sulawesi Selatan</title>
+    <title>Sulawesi Tenggara</title>
 </head>
 
 <body>
     <!--==================== HEADER ====================-->
     <header class="header" id="header">
         <nav class="nav container">
-            <a href="{{ route('homepage') }}" class="nav__logo">SULAWESI<i class="bx bxs-map"></i>SELATAN</a>
+            <a href="{{ route('homepage') }}" class="nav__logo">SULAWESI<i class="bx bxs-map"></i>TENGGARA</a>
 
             <div class="nav__menu">
                 <ul class="nav__list">
@@ -74,11 +74,11 @@
         <div class="footer__container container grid">
             <div>
                 <a href="{{ route('homepage') }}" class="footer__logo">
-                    SULAWESI<i class="bx bxs-map"></i>SELATAN
+                    SULAWESI<i class="bx bxs-map"></i>TENGGARA
                 </a>
                 <p class="footer__description">
                     Visi kami adalah membantu orang menemukan <br />
-                    Tempat wisata terbaik di Sulawesi Selatan.
+                    Tempat wisata terbaik di Sulawesi Tenggara.
             </div>
 
             <div class="footer__content">

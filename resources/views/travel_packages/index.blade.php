@@ -1,13 +1,13 @@
 @extends('layouts.frontend')
 
-@php
+{{-- @php
     function convertToIDR($amountInUSD)
     {
         $exchangeRate = 15000; // Contoh nilai tukar USD ke IDR
         $amountInIDR = $amountInUSD * $exchangeRate;
         return $amountInIDR;
     }
-@endphp
+@endphp --}}
 
 @section('content')
     <!--==================== HOME ====================-->
@@ -38,11 +38,11 @@
                 @foreach ($travel_packages as $travel_package)
                     <article class="popular__card">
                         <a href="{{ route('travel_package.show', $travel_package->slug) }}">
-                            <img src="{{ Storage::url($travel_package->galleries->first()->images) }}" alt=""
-                                class="popular__img" />
+                            <img src="{{ Storage::url(optional($travel_package->galleries->first())->images) }}" class="islands__bg" alt="Wisata 2" />
+
                             <div class="popular__data">
                                 <h2 class="popular__price">
-                                    <span>Rp</span>{{ number_format(convertToIDR($travel_package->price), 2, ',', '.') }}
+                                    <span>Rp</span>{{ convertToIDR($travel_package->price) }}
                                 </h2>
                                 <h3 class="popular__title">{{ $travel_package->location }}</h3>
                                 <p class="popular__description">{{ $travel_package->type }}</p>

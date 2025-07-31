@@ -1,13 +1,13 @@
 @extends('layouts.frontend')
 
-@php
+{{-- @php
     function convertToIDR($amountInUSD)
     {
         $exchangeRate = 15000; // Contoh nilai tukar USD ke IDR
         $amountInIDR = $amountInUSD * $exchangeRate;
         return $amountInIDR;
     }
-@endphp
+@endphp --}}
 
 <link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
 
@@ -39,12 +39,12 @@
         <div class="swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide">
-                <img src="{{ asset('frontend/assets/img/hero.jpg') }}" class="islands__bg" alt="Sulawesi Selatan" />
+                <img src="{{ asset('frontend/assets/img/hero.jpg') }}" class="islands__bg" alt="Sulawesi Tenggara" />
                 <div class="bg__overlay">
                     <div class="islands__container container">
                         <div class="islands__data" style="z-index: 99; position: relative">
-                            <h1 class="islands__title">Sulawesi Selatan</h1>
-                            <p class="islands__description">Selamat datang di wisata Sulawesi Selatan</p>
+                            <h1 class="islands__title">Sulawesi Tenggara</h1>
+                            <p class="islands__description">Selamat datang di wisata Sulawesi Tenggara</p>
                         </div>
                     </div>
                 </div>
@@ -53,8 +53,7 @@
             <!-- Slide 2 -->
             @foreach ($travel_packages as $package)
                 <div class="swiper-slide">
-                    <img src="{{ Storage::url($package->galleries->first()->images) }}" class="islands__bg"
-                        alt="Wisata 2" />
+                    <img src="{{ Storage::url(optional($package->galleries->first())->images) }}" class="islands__bg" alt="Wisata 2" />
                     <div class="bg__overlay">
                         <div class="islands__container container">
                             <div class="islands__data" style="z-index: 99; position: relative">
@@ -119,11 +118,11 @@
                     @foreach ($travel_packages as $travel_package)
                         <article class="popular__card swiper-slide">
                             <a href="{{ route('travel_package.show', $travel_package->slug) }}">
-                                <img src="{{ Storage::url($travel_package->galleries->first()->images) }}" alt=""
+                                <img src="{{ Storage::url(optional($package->galleries->first())->images) }}" alt=""
                                     class="popular__img" />
                                 <div class="popular__data">
                                     <h2 class="popular__price">
-                                        <span>Rp</span>{{ number_format(convertToIDR($travel_package->price), 2, ',', '.') }}
+                                        <span>Rp</span>{{ convertToIDR($travel_package->price) }}
                                     </h2>
                                     <h3 class="popular__title">
                                         {{ $travel_package->location }}

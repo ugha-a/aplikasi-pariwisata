@@ -15,4 +15,9 @@ class TravelPackage extends Model
     {
         return $this->hasMany(Gallery::class);
     }
+
+    public function gallerie()
+    {
+        return $this->hasOne(Gallery::class);
+    }
 }
