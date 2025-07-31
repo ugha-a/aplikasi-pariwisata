@@ -1,5 +1,6 @@
 @extends('layouts.frontend')
 
+<<<<<<< HEAD
 {{-- @php
     function convertToIDR($amountInUSD)
     {
@@ -8,6 +9,9 @@
         return $amountInIDR;
     }
 @endphp --}}
+=======
+@dd(function_exists('convertToIDR'))
+>>>>>>> 8ccba90dd2e1b862ec9ca804837a52cf7bd4450b
 
 @section('content')
     <!--==================== HOME ====================-->

@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\Admin\CategoryController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,14 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false]);
 
-Route::group(['middleware' => ['is_admin','auth'], 'prefix' => 'admin', 'as' => 'admin.'], function() {
+Route::group(['middleware' => ['is_admin', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     // booking
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'destroy']);
     // travel packages
     Route::resource('travel_packages', \App\Http\Controllers\Admin\TravelPackageController::class)->except('show');
-    Route::resource('travel_packages.galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['create', 'index','show']);
+    Route::resource('travel_packages.galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['create', 'index', 'show']);
     // categories
     // Route::resource('categories', CategoryController::class)->except('show');
     // locations
@@ -37,15 +36,18 @@ Route::group(['middleware' => ['is_admin','auth'], 'prefix' => 'admin', 'as' => 
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('homepage');
 // travel packages
-Route::get('travel-packages',[\App\Http\Controllers\TravelPackageController::class, 'index'])->name('travel_package.index');
-Route::get('travel-packages/{travel_package:slug}',[\App\Http\Controllers\TravelPackageController::class, 'show'])->name('travel_package.show');
+Route::get('travel-packages', [\App\Http\Controllers\TravelPackageController::class, 'index'])->name('travel_package.index');
+Route::get('travel-packages/{travel_package:slug}', [\App\Http\Controllers\TravelPackageController::class, 'show'])->name('travel_package.show');
 // location
 Route::get('Location', [\App\Http\Controllers\LokasiWisatacontroller::class, 'index'])->name('location.index');
 // contact
-Route::get('contact', function() {
+Route::get('contact', function () {
     return view('contact');
 })->name('contact');
 //location
 
 // booking
 Route::post('booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
+
+//excel exports
+Route::get('excel/export/laporan-pemesanan', [\App\Http\Controllers\LaporanController::class, 'laporanExcelPesanan'])->name('excel.export.pemesanan');
