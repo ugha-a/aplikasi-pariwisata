@@ -7,8 +7,8 @@
             <div class="row mb-2">
                 <div class="col-sm-12 justify-content-between d-flex">
                     <h1 class="m-0">{{ __('Booking') }}</h1>
-                    <a class="btn btn-danger" href="{{ route('excel.export.pemesanan') }}">
-                        PDF
+                    <a class="btn btn-success" href="{{ route('excel.export.pemesanan') }}">
+                        Excel
                     </a>
                 </div><!-- /.col -->
             </div><!-- /.row -->
