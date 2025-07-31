@@ -13,12 +13,14 @@ class AdminMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if(!auth()->user()->is_admin) {
-            abort(403);
-            // return redirect()->route('logout');
+        $user = auth()->user();
+
+        if (!$user || !in_array($user->role, $roles)) {
+            abort(403, 'Akses ditolak.');
         }
+
         return $next($request);
     }
 }
