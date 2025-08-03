@@ -39,7 +39,20 @@ class BookingController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $booking = Booking::with('travel_package')->findOrFail($id);
+    
+        // Pastikan nomor WA bersih dari spasi/tanda lain
+        $phone = preg_replace('/\D/', '', $booking->number_phone);
+    
+        // Pastikan nomor sudah format internasional (Indonesia: mulai 62)
+        if (substr($phone, 0, 1) === '0') {
+            $phone = '62' . substr($phone, 1);
+        }
+    
+        $message = "Halo {$booking->name}, booking Anda telah disetujui.";
+        $url = "https://wa.me/{$phone}?text=" . urlencode($message);
+    
+        return redirect()->away($url);
     }
 
     /**

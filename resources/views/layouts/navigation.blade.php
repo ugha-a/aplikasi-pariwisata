@@ -57,7 +57,31 @@
                 </li>
             @endif
 
-            {{-- @if (in_array(auth() --}}
+            @if (in_array(auth()->user()->role, ['admin', 'dinas']))
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-bar fa-lg"></i>
+                        <p>
+                            Laporan
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('report.sales.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Laporan Penjualan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.bookings.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Laporan Booking</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
     
         </ul>
     </nav>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SalesLaporanController;
 // use App\Http\Controllers\Admin\CategoryController;
 
 /*
@@ -20,7 +21,7 @@ Route::group(['middleware' => ['check.role:admin,dinas', 'auth'], 'prefix' => 'a
     Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     // booking
-    Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'destroy']);
+    Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'destroy', 'show']);
     // travel packages
     Route::resource('travel_packages', \App\Http\Controllers\Admin\TravelPackageController::class)->except('show');
     Route::resource('travel_packages.galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['create', 'index', 'show']);
@@ -51,3 +52,4 @@ Route::post('booking', [App\Http\Controllers\BookingController::class, 'store'])
 
 //excel exports
 Route::get('excel/export/laporan-pemesanan', [\App\Http\Controllers\LaporanController::class, 'laporanExcelPesanan'])->name('excel.export.pemesanan');
+Route::get('/laporan-pemesanan', [SalesLaporanController::class, 'index'])->name('report.sales.index');

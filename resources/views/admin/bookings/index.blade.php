@@ -51,7 +51,9 @@
                                                 @csrf 
                                                 @method('delete')
                                                 <button class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>
-                                            </form>                              
+                                            </form>                   
+
+                                            <a href="{{ route('admin.bookings.show', $booking->id) }}" class="btn btn-sm btn-info"> <i class="fas fa-check-circle"></i> </a>
                                         </td>
                                     </tr>
                                 @endforeach
