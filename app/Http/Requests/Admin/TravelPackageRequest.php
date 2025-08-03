@@ -27,7 +27,8 @@ class TravelPackageRequest extends FormRequest
                     'type' => 'required',
                     'location' => 'required',
                     'price' => 'required',
-                    'description' => 'required'
+                    'description' => 'required',
+                    'facility' => 'required'
                 ];
             }
             case 'PUT':
@@ -36,7 +37,8 @@ class TravelPackageRequest extends FormRequest
                     'type' => 'required',
                     'location' => 'required',
                     'price' => 'required',
-                    'description' => 'required'
+                    'description' => 'required',
+                    'facility' => 'required'
                 ];
             }
         }

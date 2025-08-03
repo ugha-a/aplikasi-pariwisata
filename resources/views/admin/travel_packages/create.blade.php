@@ -24,34 +24,41 @@
                         <form method="post" action="{{ route('admin.travel_packages.store') }}">
                             @csrf
                             <div class="form-group row border-bottom pb-4">
-                                <label for="type" class="col-sm-2 col-form-label">Type</label>
+                                <label for="type" class="col-sm-2 col-form-label">Tipe</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="type" value="{{ old('type') }}"
                                         id="type">
                                 </div>
                             </div>
                             <div class="form-group row border-bottom pb-4">
-                                <label for="Location" class="col-sm-2 col-form-label">Location</label>
+                                <label for="Location" class="col-sm-2 col-form-label">Lokasi</label>
                                 <div class="col-sm-10">
                                     <input text="text" class="form-control" id="Location" name="location"
                                         value="{{ old('location') }}">
                                 </div>
                             </div>
                             <div class="form-group row border-bottom pb-4">
-                                <label for="price" class="col-sm-2 col-form-label">Price</label>
+                                <label for="price" class="col-sm-2 col-form-label">Harga</label>
                                 <div class="col-sm-10">
                                     <input text="number" class="form-control" id="price" name="price"
                                         value="{{ old('price') }}">
                                 </div>
                             </div>
                             <div class="form-group row border-bottom pb-4">
-                                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                                <label for="description" class="col-sm-2 col-form-label">Deskripsi</label>
                                 <div class="col-sm-10">
                                     <textarea class="form-control" name="description" name="type" id="description" cols="30" rows="7"
-                                        placeholder="Description text...">{{ old('description') }}</textarea>
+                                        placeholder="masukkan deskripsi">{{ old('description') }}</textarea>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-success">Save</button>
+                            <div class="form-group row border-bottom pb-4">
+                                <label for="facility" class="col-sm-2 col-form-label">Fasilitas</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" name="facility" name="type" id="facility" cols="30" rows="7"
+                                        placeholder="masukkan fasilitas">{{ old('facility') }}</textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success">Simpan</button>
                         </form>
                     </div>
                 </div>

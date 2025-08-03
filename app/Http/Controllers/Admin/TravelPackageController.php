@@ -34,6 +34,7 @@ class TravelPackageController extends Controller
      */
     public function store(TravelPackageRequest $request)
     {
+        
         if($request->validated()) {
             $slug = Str::slug($request->location, '-');
             $travel_package = TravelPackage::create($request->validated() + ['slug' => $slug ]);

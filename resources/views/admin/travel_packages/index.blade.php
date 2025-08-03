@@ -27,10 +27,10 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Type</th>
-                                        <th>Location</th>
-                                        <th>Price</th>
-                                        <th>Action</th>
+                                        <th>Tipe</th>
+                                        <th>Lokasi</th>
+                                        <th>Harga</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
