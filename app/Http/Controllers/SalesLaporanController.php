@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Visit;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Exports\LaporanKunjungan;
 use App\Exports\LaporanPemesanan;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -15,7 +16,7 @@ class SalesLaporanController extends Controller
         $filename = 'laporan-pemesanan-' . date('Y-m-d') . '.xlsx';
 
         if (ob_get_contents()) ob_end_clean();
-        return Excel::download(new LaporanPemesanan, $filename, \Maatwebsite\Excel\Excel::XLSX);
+        return Excel::download(new LaporanKunjungan, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function index()

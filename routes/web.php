@@ -53,5 +53,6 @@ Route::post('booking', [App\Http\Controllers\BookingController::class, 'store'])
 
 //excel exports
 Route::get('excel/export/laporan-pemesanan', [\App\Http\Controllers\LaporanController::class, 'laporanExcelPesanan'])->name('excel.export.pemesanan');
+Route::get('excel/export/laporan-kunjungan', [\App\Http\Controllers\LaporanController::class, 'laporanExcelKunjungan'])->name('excel.export.kunjungan');
 Route::get('/laporan-kunjungan', [SalesLaporanController::class, 'index'])->name('report.sales.index');
 Route::get('/laporan-pemesanan', [FavoriteLaporanController::class, 'index'])->name('report.pemesanan.index');

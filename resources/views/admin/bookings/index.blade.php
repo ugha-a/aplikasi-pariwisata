@@ -33,6 +33,7 @@
                                         <th>Email</th>
                                         <th>Nomor Hp</th>
                                         <th>Tanggal</th>
+                                        <th>Status</th>
                                         <th>Travel Package</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -45,6 +46,7 @@
                                         <td>{{ $booking->email }}</td>
                                         <td>{{ $booking->number_phone }}</td>
                                         <td>{{ $booking->date }}</td>
+                                        <td>{{ $booking->status }}</td>
                                         <td>{{ $booking->travel_package->location }}</td>
                                         <td>
                                             <form onclick="return confirm('are you sure ?');" class="d-inline-block" action="{{ route('admin.bookings.destroy', [$booking]) }}" method="post">
@@ -53,7 +55,9 @@
                                                 <button class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>
                                             </form>                   
 
-                                            <a href="{{ route('admin.bookings.show', $booking->id) }}" class="btn btn-sm btn-info"> <i class="fas fa-check-circle"></i> </a>
+                                            @if (!$booking->status == 'di-setujui')
+                                                <a href="{{ route('admin.bookings.show', $booking->id) }}" class="btn btn-sm btn-info"> <i class="fas fa-check-circle"></i> </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

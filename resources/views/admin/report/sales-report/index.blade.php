@@ -5,8 +5,11 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('Laporan Kunjungan Wisata') }}</h1>
+                <div class="col-sm-12 justify-content-between d-flex">
+                    <h1 class="m-0">{{ __('Laporan Kunjungan User') }}</h1>
+                    <a class="btn btn-success" href="{{ route('excel.export.kunjungan') }}">
+                        Excel
+                    </a>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->

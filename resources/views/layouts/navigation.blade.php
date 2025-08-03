@@ -70,7 +70,7 @@
                         <li class="nav-item">
                             <a href="{{ route('report.sales.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Laporan Penjualan</p>
+                                <p>Laporan Kunjungan</p>
                             </a>
                         </li>
                         <li class="nav-item">
