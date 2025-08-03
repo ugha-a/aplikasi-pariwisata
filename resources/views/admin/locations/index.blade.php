@@ -27,9 +27,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Location</th>
-                                        <th>Lat</th>
-                                        <th>Lag</th>
+                                        <th>Lokasi</th>
+                                        <th>Latitude</th>
+                                        <th>Longitude</th>
                                     </tr>
                                 </thead>
                                 <tbody>

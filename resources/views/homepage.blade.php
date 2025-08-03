@@ -162,7 +162,7 @@
                     </h2>
                     <p class="value__description">
                         Kami selalu siap melayani dengan memberikan pelayanan terbaik untuk Anda.
-                        Kami membuat pilihan yang baik untuk bepergian ke seluruh wisata yang ada di Sumbawa.
+                        Kami membuat pilihan yang baik untuk bepergian ke seluruh wisata yang ada di Sulawesi Tenggara.
                     </p>
                 </div>
 
@@ -171,7 +171,7 @@
                         <header class="value__accordion-header">
                             <i class="bx bxs-shield-x value-accordion-icon"></i>
                             <h3 class="value__accordion-title">
-                                Tempat terbaik di Sumbawa
+                                Tempat terbaik di Sulawesi Tenggara
                             </h3>
                             <div class="value__accordion-arrow">
                                 <i class="bx bxs-down-arrow"></i>

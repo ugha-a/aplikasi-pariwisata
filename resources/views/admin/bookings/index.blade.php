@@ -29,12 +29,12 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Name</th>
+                                        <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Number Phone</th>
-                                        <th>Date</th>
+                                        <th>Nomor Hp</th>
+                                        <th>Tanggal</th>
                                         <th>Travel Package</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>

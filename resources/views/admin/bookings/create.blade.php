@@ -23,7 +23,7 @@
                         <form method="post" action="{{ route('admin.categories.store') }}">
                             @csrf 
                             <div class="form-group row border-bottom pb-4">
-                                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                <label for="name" class="col-sm-2 col-form-label">Nama</label>
                                 <div class="col-sm-10">
                                 <input type="text" class="form-control" name="name" value="{{ old('name') }}" id="name" placeholder="example: Bali">
                                 </div>

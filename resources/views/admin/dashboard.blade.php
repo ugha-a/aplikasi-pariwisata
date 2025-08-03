@@ -21,7 +21,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="card-text">
-                                    {{ __('Welcome') }} {{ auth()->user()->name }} !
+                                    {{ __('Selamat Datangs') }} {{ auth()->user()->name }} !
                                 </p>
                             </div>
                         </div>
