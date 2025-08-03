@@ -39,7 +39,7 @@
                     {!! $travel_package->description !!}
                     <br>
                     <h3>Fasilitas Yang Tersedia</h3>
-                    Fasilitas : Kamar Mandi, Kamar Tidur, AC, TV, Wifi, Kolam Renang
+                    {!! $travel_package->facilities !!}
                 </div>
                 <div class="package-travel">
                     <h3>contact Us</h3>
@@ -75,7 +75,9 @@
                 @foreach ($travel_packages as $travel_package)
                     <article class="popular__card">
                         <a href="{{ route('travel_package.show', $travel_package->slug) }}">
-                            <img src="{{ Storage::url($travel_package->galleries->first()->images) }}" alt=""
+                            @if (!$travel_package->galleries->isEmpty())
+                                <img src="{{ Storage::url($travel_package->galleries->first()->images) }}" alt=""
+                            @endif
                                 class="popular__img" />
                             <div class="popular__data">
                                 <h2 class="popular__price"><span>$</span>{{ number_format($travel_package->price, 2) }}</h2>
