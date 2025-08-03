@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SalesLaporanController;
+use App\Http\Controllers\FavoriteLaporanController;
 // use App\Http\Controllers\Admin\CategoryController;
 
 /*
@@ -52,4 +53,5 @@ Route::post('booking', [App\Http\Controllers\BookingController::class, 'store'])
 
 //excel exports
 Route::get('excel/export/laporan-pemesanan', [\App\Http\Controllers\LaporanController::class, 'laporanExcelPesanan'])->name('excel.export.pemesanan');
-Route::get('/laporan-pemesanan', [SalesLaporanController::class, 'index'])->name('report.sales.index');
+Route::get('/laporan-kunjungan', [SalesLaporanController::class, 'index'])->name('report.sales.index');
+Route::get('/laporan-pemesanan', [FavoriteLaporanController::class, 'index'])->name('report.pemesanan.index');

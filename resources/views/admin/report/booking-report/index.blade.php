@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('Laporan Kunjungan Wisata') }}</h1>
+                    <h1 class="m-0">{{ __('Laporan Penjualan') }}</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -34,7 +34,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <div id="chartKunjungan"></div>
+                            <div id="chartTopBooking"></div>
                         </div>
                     </div>
                 </div>
@@ -47,49 +47,46 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            var kunjungan = @json($kunjungan);
+            var topBooking = @json($topBooking);
         
-            var tanggalLabels = kunjungan.map(item => item.tanggal);
-            var totalData = kunjungan.map(item => item.total);
+            var labels = topBooking.map(item => item.nama_paket);
+            console.log(topBooking);
+            
+            var data = topBooking.map(item => item.total);
         
             var options = {
+                chart: {
+                    type: 'pie',
+                    height: 500
+                },
+                labels: labels,
+                series: data,
                 title: {
-                    text: "Kunjungan 7 Hari Terakhir",
+                    text: "5 Paket Wisata Paling Banyak Dibooking",
                     align: 'left',
                     style: {
                         fontSize: '14px',
-                        fontWeight: 'bold',
-                        color: '#263238'
+                        fontWeight: 'bold'
                     }
                 },
-                chart: {
-                    type: 'bar',
-                    height: 500
-                },
-                series: [{
-                    name: 'Jumlah Kunjungan',
-                    data: totalData
-                }],
-                xaxis: {
-                    categories: tanggalLabels
-                },
-                yaxis: {
-                    min: 0,
-                    forceNiceScale: true
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 4,
-                        horizontal: false,
-                        columnWidth: '50%'
+                tooltip: {
+                    y: {
+                        formatter: function (val, opts) {
+                            var index = opts.seriesIndex;
+                            return val + " kali dibooking";
+                        }
                     }
                 },
-                dataLabels: {
-                    enabled: true
-                }
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: { width: 300 },
+                        legend: { position: 'bottom' }
+                    }
+                }]
             };
         
-            var chart = new ApexCharts(document.querySelector("#chartKunjungan"), options);
+            var chart = new ApexCharts(document.querySelector("#chartTopBooking"), options);
             chart.render();
         });
     </script>
