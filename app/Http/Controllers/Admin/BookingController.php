@@ -40,6 +40,8 @@ class BookingController extends Controller
     public function show(string $id)
     {
         $booking = Booking::with('travel_package')->findOrFail($id);
+
+        $booking->update(['status' => 'di-setujui']);
     
         // Pastikan nomor WA bersih dari spasi/tanda lain
         $phone = preg_replace('/\D/', '', $booking->number_phone);
