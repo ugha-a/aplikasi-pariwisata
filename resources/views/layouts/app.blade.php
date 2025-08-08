@@ -13,6 +13,113 @@
     <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
+    <style>
+
+        .sidebar-brand-custom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 58px;
+            background: #fff !important;
+            border-bottom: 1px solid #f2f4f9;
+            transition: background 0.19s;
+            cursor: pointer;
+            text-decoration: none !important;
+        }
+
+        .sidebar-brand-text {
+            color: #22346c !important;
+            font-weight: 700;
+            font-size: 1.18rem;
+            letter-spacing: 1.3px;
+            transition: color 0.18s;
+        }
+
+        /* Hover effect */
+        .sidebar-brand-custom:hover .sidebar-brand-text {
+            color: #3366FF !important;
+        }
+        /* --- WHITE SIDEBAR, HEADER, FOOTER + SOFT SHADOW --- */
+        .main-sidebar,
+        .main-header,
+        .main-footer {
+            background: #fff !important;
+            color: #22346c !important;
+        }
+    
+        /* NAVBAR: Soft blue shadow & elegant border */
+        .main-header {
+            box-shadow: 0 2px 14px 0 rgba(51,102,255,0.06), 0 1.5px 4px 0 rgba(0,0,0,0.03) !important;
+            border-bottom: 1px solid #f2f4f9;
+        }
+        /* FOOTER: Soft blue shadow (atas) & elegant border */
+        .main-footer {
+            box-shadow: 0 -3px 14px 0 rgba(51,102,255,0.06), 0 -1.5px 6px 0 rgba(0,0,0,0.03) !important;
+            border-top: 1px solid #f2f4f9;
+        }
+        /* SIDEBAR: White, very subtle right border */
+        .main-sidebar {
+            border-right: 1px solid #f2f4f9;
+            box-shadow: none !important;
+        }
+    
+        /* SIDEBAR MENU, BRAND, ICONS: BIRU */
+        .sidebar .nav-sidebar > .nav-item > .nav-link {
+            color: #22346c !important;
+            background: transparent !important;
+            border-radius: 8px;
+            margin: 0 6px;
+            transition: background 0.18s;
+        }
+        .sidebar .nav-sidebar > .nav-item > .nav-link.active,
+        .sidebar .nav-sidebar > .nav-item > .nav-link:hover {
+            background: #eaf1ff !important;
+            color: #3366FF !important;
+        }
+        .sidebar .brand-link,
+        .sidebar .brand-link .brand-text {
+            color: #3366FF !important;
+            background: #fff !important;
+            border-bottom: 1px solid #f2f4f9;
+        }
+        .sidebar .nav-icon, .sidebar .brand-link i {
+            color: #3366FF !important;
+            opacity: 0.88;
+        }
+        @media (max-width: 991.98px) {
+            .main-sidebar { border-right: none !important; }
+        }
+
+        .sidebar .nav-sidebar .nav-treeview {
+    background: #f6faff; /* Putih kebiruan, agar kontras */
+    margin-left: 0.25rem;
+    border-radius: 8px;
+    padding: 4px 0;
+    /* box-shadow lembut agar tidak flat */
+    box-shadow: 0 2px 6px rgba(51,102,255,0.06);
+}
+
+.sidebar .nav-treeview > .nav-item > .nav-link {
+    color: #22346c !important;
+    background: transparent !important;
+    font-size: 0.97rem;
+    border-radius: 6px;
+    margin: 2px 12px 2px 20px; /* indent agar jelas submenu */
+    padding-left: 1.7rem;
+    transition: background 0.17s, color 0.17s;
+}
+
+.sidebar .nav-treeview > .nav-item > .nav-link.active,
+.sidebar .nav-treeview > .nav-item > .nav-link:hover {
+    background: #eaf1ff !important;   /* Hover biru muda */
+    color: #3366FF !important;
+    font-weight: 600;
+}
+.sidebar .nav-treeview .nav-icon {
+    color: #3366FF !important;
+    opacity: 0.82;
+}
+    </style>
     @yield('styles')
 </head>
 
@@ -25,27 +132,27 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                            class="fas fa-bars" style="color: #3366FF"></i></a>
                 </li>
             </ul>
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                    <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false" style="color: #3366FF">
                         {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" style="left: inherit; right: 0px;">
-                        <a href="{{ route('admin.profile.show') }}" class="dropdown-item">
-                            <i class="mr-2 fas fa-file"></i>
+                        <a href="{{ route('admin.profile.show') }}" class="dropdown-item" style="color: #3366FF">
+                            <i class="mr-2 fas fa-file" style="color: #3366FF"></i>
                             {{ __('My profile') }}
                         </a>
                         <div class="dropdown-divider"></div>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <a href="{{ route('logout') }}" class="dropdown-item"
-                                onclick="event.preventDefault(); this.closest('form').submit();">
-                                <i class="mr-2 fas fa-sign-out-alt"></i>
+                                onclick="event.preventDefault(); this.closest('form').submit();" style="color: #3366FF">
+                                <i class="mr-2 fas fa-sign-out-alt" style="color: #3366FF"></i>
                                 {{ __('Log Out') }}
                             </a>
                         </form>
@@ -57,13 +164,9 @@
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="/" class="brand-link">
-                <img src="{{ asset('images/AdminLTELogo.png') }}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+            <a href="/" class="brand-link sidebar-brand-custom">
+                <span class="brand-text align-middle sidebar-brand-text">Nusantara</span>
             </a>
-
             @include('layouts.navigation')
         </aside>
 

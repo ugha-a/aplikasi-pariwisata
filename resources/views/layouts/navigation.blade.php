@@ -1,11 +1,27 @@
 <!-- Sidebar -->
 <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center">
         <div class="info">
-            <a href="{{ route('admin.profile.show') }}" class="d-block">{{ Auth::user()->name }}</a>
+            <a href="{{ route('admin.profile.show') }}" class="d-block user-panel-link">{{ Auth::user()->name }}</a>
         </div>
     </div>
+    <style>
+        .user-panel .user-panel-link {
+            color: #22346c !important;     /* Warna biru gelap default, sama seperti menu sidebar */
+            font-weight: 600;
+            background: none !important;
+            transition: color 0.18s;
+            padding: 2px 12px;
+            border-radius: 7px;
+            display: inline-block;
+        }
+        .user-panel .user-panel-link:hover {
+            color: #3366FF !important;     /* Warna biru terang saat hover */
+            background: none !important;   /* Background tetap transparan */
+            text-decoration: underline;    /* Opsional: underline saat hover */
+        }
+    </style>
 
 
     <!-- Sidebar Menu -->
