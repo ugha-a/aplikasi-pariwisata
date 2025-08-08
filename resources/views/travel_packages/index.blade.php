@@ -11,7 +11,7 @@
 
 @section('content')
     <!--==================== HOME ====================-->
-    <section>
+    {{-- <section>
         <div class="swiper-container gallery-top">
             <div class="swiper-wrapper">
                 <section class="islands swiper-slide">
@@ -25,7 +25,7 @@
                 </section>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!--==================== POPULAR ====================-->
     <section class="section" id="popular">
