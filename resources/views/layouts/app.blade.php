@@ -235,20 +235,23 @@
     </div>
 
     <!-- ====== JS: urutan penting ====== -->
-  <!-- 1) jQuery (harus sebelum DataTables & AdminLTE) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 1) jQuery (harus sebelum DataTables & AdminLTE) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- 2) Bootstrap Bundle (untuk AdminLTE & DataTables BS4) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 2) Bootstrap Bundle (untuk AdminLTE & DataTables BS4) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- 3) DataTables JS bundle (harus setelah jQuery) -->
-  <script src="https://cdn.datatables.net/v/bs4/dt-1.13.8/r-2.5.0/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.js"></script>
+    <!-- 3) DataTables JS bundle (harus setelah jQuery) -->
+    <script src="https://cdn.datatables.net/v/bs4/dt-1.13.8/r-2.5.0/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.js"></script>
 
-  <!-- 4) (Opsional) JSZip kalau pakai export Excel -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- 4) (Opsional) JSZip kalau pakai export Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-  <!-- 5) AdminLTE (setelah jQuery & Bootstrap) -->
-  <script src="{{ asset('js/adminlte.min.js') }}"></script>
+    <!-- 5) AdminLTE (setelah jQuery & Bootstrap) -->
+    <script src="{{ asset('js/adminlte.min.js') }}"></script>
+
+    <!-- 6) ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->

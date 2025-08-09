@@ -24,17 +24,19 @@
       <div class="card card-neo">
         <div class="card-body">
           <div class="table-responsive">
+
+            {{-- Toolbar di atas tabel: search custom --}}
             <div class="row mb-3">
-                <div class="col-md-6">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      {{-- <span class="input-group-text"><i class="fa fa-search"></i></span> --}}
-                    </div>
-                    {{-- <input id="globalSearch" type="text" class="form-control" placeholder="Cari tipe, lokasi, atau harga…"> --}}
+              <div class="col-md-6">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    {{-- <span class="input-group-text"> <i class="fas fa-search position-absolute"></i></i></span> --}}
                   </div>
+                  {{-- <input id="globalSearch" type="text" class="form-control" placeholder="Cari tipe, lokasi, atau harga…"> --}}
                 </div>
               </div>
-              
+            </div>
+
             <table id="tpTable" class="table table-hover table-borderless w-100 align-middle">
               <thead class="thead-neo">
                 <tr>
@@ -73,125 +75,99 @@
                   </tr>
                 @endforeach
               </tbody>
-              {{-- <tfoot>
-                <tr>
-                  <th>No</th>
-                  <th>Tipe</th>
-                  <th>Lokasi</th>
-                  <th>Harga</th>
-                  <th>Aksi</th>
-                </tr>
-              </tfoot> --}}
             </table>
+
           </div>
         </div>
-
-        {{-- Kalau masih ingin pakai pagination Laravel, biarkan di bawah ini.
-             Tapi DataTables sudah handle paging client-side. --}}
-        {{-- <div class="card-footer clearfix">
-          {{ $travel_packages->links() }}
-        </div> --}}
       </div>
     </div>
   </div>
 @endsection
 
 @section('styles')
-  {{-- DataTables core + Bootstrap 4 + Responsive + Buttons --}}
-  <style>
-    :root{ --brand:#3366FF; --soft:#eaf1ff; --ink:#22346c; }
-    .card-neo{
-      border: 1px solid #f1f3fa; border-radius: 14px;
-      box-shadow: 0 10px 28px rgba(51,102,255,.06);
-    }
-    .thead-neo th{
-      background: var(--soft); color: var(--ink); border: none !important;
-    }
-    #tpTable tbody tr:hover{ background: #fcfdff; }
-    /* tombol action */
-    .btn-action{
-      border: 1px solid #edf1ff;
-    }
-    .btn-action:hover{
-      border-color: var(--brand); color: var(--brand) !important;
-      box-shadow: 0 2px 10px rgba(51,102,255,.12);
-    }
-    /* DataTables toolbar */
-    div.dataTables_wrapper div.dataTables_filter input{
-      border: 1px solid #dde7ff; border-radius: .5rem; padding: .35rem .6rem;
-      outline: none; box-shadow: none;
-    }
-    div.dataTables_wrapper div.dataTables_length select{
-      border: 1px solid #dde7ff; border-radius: .5rem; padding: .25rem .5rem;
-    }
-    .dt-buttons .btn{
-      border: 1px solid #dde7ff !important; background: #fff !important; color: var(--ink) !important;
-      border-radius: .5rem !important;
-    }
-    .dt-buttons .btn:hover{ color: var(--brand) !important; border-color: var(--brand) !important; }
-    /* Responsive control icon color */
-    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
-    table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before{
-      background-color: var(--brand);
-    }
-  </style>
+<style>
+  :root{ --brand:#3366FF; --soft:#eaf1ff; --ink:#22346c; }
+  .card-neo{ border:1px solid #f1f3fa; border-radius:14px; box-shadow:0 10px 28px rgba(51,102,255,.06); }
+  .thead-neo th{ background:var(--soft); color:var(--ink); border:none!important; }
+  #tpTable tbody tr:hover{ background:#fcfdff; }
+  .btn-action{ border:1px solid #edf1ff; }
+  .btn-action:hover{ border-color:var(--brand); color:var(--brand)!important; box-shadow:0 2px 10px rgba(51,102,255,.12); }
+  /* Sembunyikan search bawaan DataTables (karena pakai custom) */
+  div.dataTables_filter{ display:none; }
+  /* Style length & buttons tetap rapi */
+  div.dataTables_length select{ border:1px solid #dde7ff; border-radius:.5rem; padding:.25rem .5rem; }
+  .dt-buttons .btn{
+    border:1px solid #dde7ff!important; background:#fff!important; color:var(--ink)!important; border-radius:.5rem!important;
+  }
+  .dt-buttons .btn:hover{ color:var(--brand)!important; border-color:var(--brand)!important; }
+  table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+  table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before{ background-color:var(--brand); }
+</style>
 @endsection
 
 @section('scripts')
-  <!-- jQuery -->
+<script>
+  jQuery(function($){
+    // cek cepat
+    console.log('jQuery:', $.fn.jquery);
+    console.log('DataTables ready?', !!$.fn.dataTable);
 
+    // formatter rupiah
+    const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(+n||0);
+    $('#tpTable tbody td[data-price]').each(function(){
+      const raw = $(this).attr('data-price');
+      $(this).text(rupiah(raw));
+    });
 
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Format harga ke Rupiah (client-side)
-      const rupiah = n => new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', maximumFractionDigits:0 }).format(+n||0);
-      document.querySelectorAll('#tpTable tbody td[data-price]').forEach(td=>{
-        const raw = td.getAttribute('data-price');
-        td.textContent = rupiah(raw);
-      });
-
-      // Inisialisasi DataTable
-      const dt = $('#tpTable').DataTable({
+    const dt = $('#tpTable').DataTable({
         responsive: true,
         autoWidth: false,
         pageLength: 10,
-        lengthMenu: [[10, 25, 50, -1],[10, 25, 50, "Semua"]],
-        order: [[1,'asc']],
+        order: [[1, 'asc']],
         language: {
-          search: "_INPUT_",
-          searchPlaceholder: "Cari tipe/lokasi…",
-          lengthMenu: "Tampil _MENU_ data",
-          info: "Menampilkan _START_–_END_ dari _TOTAL_ data",
-          infoEmpty: "Tidak ada data",
-          zeroRecords: "Data tidak ditemukan",
-          paginate: { previous: "‹", next: "›" }
+            info: "Menampilkan _START_–_END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data",
+            zeroRecords: "Data tidak ditemukan",
+            paginate: { previous: "‹", next: "›" }
         },
         columnDefs: [
-          { targets: 0, className: "text-center", orderable: false },
-          { targets: -1, orderable: false, searchable: false, className: "text-nowrap" }
+            { targets: 0, className: "text-center", orderable: false },
+            { targets: -1, orderable: false, searchable: false, className: "text-nowrap" }
         ],
-        dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-md-right text-left'Bf>>" +
-             "<'row'<'col-12'tr>>" +
-             "<'row mt-3'<'col-md-6'i><'col-md-6 text-md-right'p>>",
-        buttons: [
-          { extend: 'print', text: '<i class="fa fa-print mr-1"></i>Print' },
-          { extend: 'excelHtml5', text: '<i class="fa fa-file-excel mr-1"></i>Excel', title: 'Travel Packages' },
-          { text: '<i class="fa fa-sync mr-1"></i>Refresh', action: (_, api)=> api.ajax ? api.ajax.reload() : location.reload() }
-        ]
-      });
-
-      $('#globalSearch').on('keyup change', function () {
-    dt.search(this.value).draw();
-  });
-
-      // Re-number kolom "No" saat sort/search
-      dt.on('order.dt search.dt', function () {
-        let i = 1;
-        dt.cells(null, 0, {search:'applied', order:'applied'}).every(function () {
-          this.data(i++);
+        // Hilangkan lengthMenu & default search box
+        dom: "<'row mb-3'<'col-md-6'<'custom-search'>>>" +
+            "<'row'<'col-12'tr>>" +
+            "<'row mt-3'<'col-md-6'i><'col-md-6 text-md-right'p>>"
         });
-      }).draw();
+
+        // Tambahkan search box custom
+        $("div.custom-search").html(`
+        <div style="position: relative; max-width: 320px;">
+            <i class="fas fa-search position-absolute" style="left:.65rem; top:50%; transform:translateY(-50%); opacity:.6;"></i>
+            <input id="globalSearch" type="search" class="form-control"
+                placeholder="Cari tipe/lokasi/harga…"
+                style="padding-left:2.2rem; border-radius:.6rem; border:1px solid #e7ecf5; background:#f8faff;">
+        </div>
+        `);
+
+        // Event filter
+        $('#globalSearch').on('keyup change', function () {
+        dt.search(this.value).draw();
+        });
+
+
+    // search custom (kalau ada #globalSearch)
+    $('#globalSearch').on('input change', function(){
+      dt.search(this.value).draw();
     });
-  </script>
+
+    // renumber kolom No
+    dt.on('order.dt search.dt', function () {
+      let i = 1;
+      dt.cells(null, 0, {search:'applied', order:'applied'}).every(function () {
+        this.data(i++);
+      });
+    }).draw();
+  });
+</script>
 @endsection
