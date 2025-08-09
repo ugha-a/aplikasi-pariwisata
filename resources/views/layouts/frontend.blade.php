@@ -172,7 +172,7 @@
                         </a>
                     </li> --}}
                     <li class="nav__item">
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ route('login') }}"
                             class="nav__link {{ request()->is('contact') ? ' active-link' : '' }}">
                             <i class="bx bx-phone"></i>
                             <span>Login</span>
