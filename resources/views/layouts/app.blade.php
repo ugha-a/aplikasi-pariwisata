@@ -7,12 +7,19 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Google Font: Source Sans Pro -->
+        <!-- Fonts -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
-    <!-- Theme style -->
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <!-- AdminLTE CSS -->
     <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
+
+    <!-- DataTables CSS (BS4 + Responsive + Buttons) -->
+    <link rel="stylesheet"
+    href="https://cdn.datatables.net/v/bs4/dt-1.13.8/r-2.5.0/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.css"/>
+
+    <!-- (Opsional) Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
     <style>
 
         .sidebar-brand-custom {
@@ -226,14 +233,28 @@
             reserved.
         </footer>
     </div>
+
+    <!-- ====== JS: urutan penting ====== -->
+  <!-- 1) jQuery (harus sebelum DataTables & AdminLTE) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- 2) Bootstrap Bundle (untuk AdminLTE & DataTables BS4) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 3) DataTables JS bundle (harus setelah jQuery) -->
+  <script src="https://cdn.datatables.net/v/bs4/dt-1.13.8/r-2.5.0/b-2.4.2/b-html5-2.4.2/b-print-2.4.2/datatables.min.js"></script>
+
+  <!-- 4) (Opsional) JSZip kalau pakai export Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- 5) AdminLTE (setelah jQuery & Bootstrap) -->
+  <script src="{{ asset('js/adminlte.min.js') }}"></script>
     <!-- ./wrapper -->
 
     <!-- REQUIRED SCRIPTS -->
 
     @vite('resources/js/app.js')
     <!-- AdminLTE App -->
-    <script src="{{ asset('js/adminlte.min.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     @yield('scripts')
     {{-- <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script> --}}

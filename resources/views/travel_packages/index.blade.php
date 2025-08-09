@@ -11,12 +11,12 @@
             <div class="popular__filter-bar">
                 <form method="GET" action="" class="popular__filter-form">
                     <input type="text" name="search" class="popular__search-input"
-                        placeholder="Cari nama wisata" value="{{ request('search') }}" />
+                        placeholder="Cari nama wisata atau lokasi..." value="{{ request('search') }}" />
 
                     <select name="lokasi" class="popular__filter-select">
                         <option value="">Semua Lokasi</option>
                         {{-- @foreach($locations as $loc) --}}
-                            <option value="lokasi">lokasi</option>
+                            {{-- <option value="{{ $loc }}" {{ request('lokasi') == $loc ? 'selected' : '' }}>{{ $loc }}</option> --}}
                         {{-- @endforeach --}}
                     </select>
                     <button type="submit" class="btn-search"><i class="bx bx-search"></i> Cari</button>

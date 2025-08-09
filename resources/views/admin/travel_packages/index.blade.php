@@ -1,69 +1,197 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12 justify-content-between d-flex">
-                    <h1 class="m-0">{{ __('Travel Package') }}</h1>
-                    <a href="{{ route('admin.travel_packages.create') }}" class="btn btn-primary btn-sm"> <i class="fa fa-plus"></i> </a>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+  <!-- Content Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-12 d-flex justify-content-between align-items-center">
+          <div>
+            <h1 class="m-0">Travel Package</h1>
+            <small class="text-muted">Kelola data paket wisata dengan cepat & mudah</small>
+          </div>
+          <a href="{{ route('admin.travel_packages.create') }}" class="btn btn-primary">
+            <i class="fa fa-plus mr-1"></i> Tambah
+          </a>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
+  </div>
 
-    <!-- Main content -->
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-
-                    <div class="card">
-                        <div class="card-body p-0">
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tipe</th>
-                                        <th>Lokasi</th>
-                                        <th>Harga</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($travel_packages as $travel_package)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $travel_package->type }}</td>
-                                        <td>{{ $travel_package->location }}</td>
-                                        <td>{{ $travel_package->price }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.travel_packages.edit', [$travel_package]) }}" class="btn btn-sm btn-info"> <i class="fa fa-edit"></i> </a>              
-                                            <form onclick="return confirm('are you sure ?');" class="d-inline-block" action="{{ route('admin.travel_packages.destroy', [$travel_package]) }}" method="post">
-                                                @csrf 
-                                                @method('delete')
-                                                <button class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>
-                                            </form>                              
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-
-                        <div class="card-footer clearfix">
-                            {{ $travel_packages->links() }}
-                        </div>
+  <!-- Main content -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="card card-neo">
+        <div class="card-body">
+          <div class="table-responsive">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      {{-- <span class="input-group-text"><i class="fa fa-search"></i></span> --}}
                     </div>
-
+                    {{-- <input id="globalSearch" type="text" class="form-control" placeholder="Cari tipe, lokasi, atau harga…"> --}}
+                  </div>
                 </div>
-            </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+              </div>
+              
+            <table id="tpTable" class="table table-hover table-borderless w-100 align-middle">
+              <thead class="thead-neo">
+                <tr>
+                  <th style="width: 56px">No</th>
+                  <th>Tipe</th>
+                  <th>Lokasi</th>
+                  <th>Harga</th>
+                  <th style="width: 120px">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($travel_packages as $travel_package)
+                  <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $travel_package->type }}</td>
+                    <td>{{ $travel_package->location }}</td>
+                    <td data-price="{{ $travel_package->price }}">{{ $travel_package->price }}</td>
+                    <td>
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                        <a href="{{ route('admin.travel_packages.edit', [$travel_package]) }}"
+                           class="btn btn-light btn-action" title="Edit">
+                          <i class="fa fa-edit"></i>
+                        </a>
+                        <form class="d-inline-block"
+                              action="{{ route('admin.travel_packages.destroy', [$travel_package]) }}"
+                              method="post"
+                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                          @csrf
+                          @method('delete')
+                          <button class="btn btn-sm btn-outline-danger" title="Hapus">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+              {{-- <tfoot>
+                <tr>
+                  <th>No</th>
+                  <th>Tipe</th>
+                  <th>Lokasi</th>
+                  <th>Harga</th>
+                  <th>Aksi</th>
+                </tr>
+              </tfoot> --}}
+            </table>
+          </div>
+        </div>
+
+        {{-- Kalau masih ingin pakai pagination Laravel, biarkan di bawah ini.
+             Tapi DataTables sudah handle paging client-side. --}}
+        {{-- <div class="card-footer clearfix">
+          {{ $travel_packages->links() }}
+        </div> --}}
+      </div>
     </div>
-    <!-- /.content -->
+  </div>
+@endsection
+
+@section('styles')
+  {{-- DataTables core + Bootstrap 4 + Responsive + Buttons --}}
+  <style>
+    :root{ --brand:#3366FF; --soft:#eaf1ff; --ink:#22346c; }
+    .card-neo{
+      border: 1px solid #f1f3fa; border-radius: 14px;
+      box-shadow: 0 10px 28px rgba(51,102,255,.06);
+    }
+    .thead-neo th{
+      background: var(--soft); color: var(--ink); border: none !important;
+    }
+    #tpTable tbody tr:hover{ background: #fcfdff; }
+    /* tombol action */
+    .btn-action{
+      border: 1px solid #edf1ff;
+    }
+    .btn-action:hover{
+      border-color: var(--brand); color: var(--brand) !important;
+      box-shadow: 0 2px 10px rgba(51,102,255,.12);
+    }
+    /* DataTables toolbar */
+    div.dataTables_wrapper div.dataTables_filter input{
+      border: 1px solid #dde7ff; border-radius: .5rem; padding: .35rem .6rem;
+      outline: none; box-shadow: none;
+    }
+    div.dataTables_wrapper div.dataTables_length select{
+      border: 1px solid #dde7ff; border-radius: .5rem; padding: .25rem .5rem;
+    }
+    .dt-buttons .btn{
+      border: 1px solid #dde7ff !important; background: #fff !important; color: var(--ink) !important;
+      border-radius: .5rem !important;
+    }
+    .dt-buttons .btn:hover{ color: var(--brand) !important; border-color: var(--brand) !important; }
+    /* Responsive control icon color */
+    table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+    table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before{
+      background-color: var(--brand);
+    }
+  </style>
+@endsection
+
+@section('scripts')
+  <!-- jQuery -->
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Format harga ke Rupiah (client-side)
+      const rupiah = n => new Intl.NumberFormat('id-ID', { style:'currency', currency:'IDR', maximumFractionDigits:0 }).format(+n||0);
+      document.querySelectorAll('#tpTable tbody td[data-price]').forEach(td=>{
+        const raw = td.getAttribute('data-price');
+        td.textContent = rupiah(raw);
+      });
+
+      // Inisialisasi DataTable
+      const dt = $('#tpTable').DataTable({
+        responsive: true,
+        autoWidth: false,
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, -1],[10, 25, 50, "Semua"]],
+        order: [[1,'asc']],
+        language: {
+          search: "_INPUT_",
+          searchPlaceholder: "Cari tipe/lokasi…",
+          lengthMenu: "Tampil _MENU_ data",
+          info: "Menampilkan _START_–_END_ dari _TOTAL_ data",
+          infoEmpty: "Tidak ada data",
+          zeroRecords: "Data tidak ditemukan",
+          paginate: { previous: "‹", next: "›" }
+        },
+        columnDefs: [
+          { targets: 0, className: "text-center", orderable: false },
+          { targets: -1, orderable: false, searchable: false, className: "text-nowrap" }
+        ],
+        dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-md-right text-left'Bf>>" +
+             "<'row'<'col-12'tr>>" +
+             "<'row mt-3'<'col-md-6'i><'col-md-6 text-md-right'p>>",
+        buttons: [
+          { extend: 'print', text: '<i class="fa fa-print mr-1"></i>Print' },
+          { extend: 'excelHtml5', text: '<i class="fa fa-file-excel mr-1"></i>Excel', title: 'Travel Packages' },
+          { text: '<i class="fa fa-sync mr-1"></i>Refresh', action: (_, api)=> api.ajax ? api.ajax.reload() : location.reload() }
+        ]
+      });
+
+      $('#globalSearch').on('keyup change', function () {
+    dt.search(this.value).draw();
+  });
+
+      // Re-number kolom "No" saat sort/search
+      dt.on('order.dt search.dt', function () {
+        let i = 1;
+        dt.cells(null, 0, {search:'applied', order:'applied'}).every(function () {
+          this.data(i++);
+        });
+      }).draw();
+    });
+  </script>
 @endsection
