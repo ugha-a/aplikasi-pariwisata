@@ -38,25 +38,27 @@
                     <h3>Deskripsi Tempat wisata {{ $travel_package->location }}</h3>
                     {!! $travel_package->description !!}
                     <br>
+                    @if ($travel_package->facilities)
                     <h3>Fasilitas Yang Tersedia</h3>
                     {!! $travel_package->facilities !!}
+                    @endif
                 </div>
                 <div class="package-travel">
-                    <h3>contact Us</h3>
+                    <h3>Kontak Kami</h3>
                     <div class="card">
                         <form action="{{ route('booking.store') }}" method="post">
                             @csrf
                             <input type="hidden" name="travel_package_id" value="{{ $travel_package->id }}">
-                            <input type="text" name="name" placeholder="Your Name" />
-                            <input type="email" name="email" placeholder="Your Email" />
-                            <input type="number" name="number_phone" placeholder="Your Number" />
+                            <input type="text" name="name" placeholder="Nama anda" />
+                            <input type="email" name="email" placeholder="Email andal" />
+                            <input type="number" name="number_phone" placeholder="Nomor Anda" />
                             <input placeholder="Pick Your Date" class="textbox-n" type="text" name="date"
                                 onfocus="(this.type='date')" id="date" />
-                            <input placeholder="Check in time" class="textbox-n" type="text" name="date"
+                            <input placeholder="Waktu check in" class="textbox-n" type="text" name="date"
                                 onfocus="(this.type='date')" id="date" />
-                            <input placeholder="Check out time" class="textbox-n" type="text" name="date"
+                            <input placeholder="Waktu check out " class="textbox-n" type="text" name="date"
                                 onfocus="(this.type='date')" id="date" />
-                            <button type="submit" class="button button-booking">Send</button>
+                            <button type="submit" class="button button-booking">Kirim</button>
                         </form>
                     </div>
                 </div>

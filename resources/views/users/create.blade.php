@@ -44,6 +44,17 @@
                         @enderror
                     </div>
 
+                    <div class="form-group">
+                        <label for="email">Nomor Hp</label>
+                        <input type="text" name="phone" id="phone"
+                               class="form-control @error('phone') is-invalid @enderror"
+                               placeholder="Masukkan nomor hp"
+                               value="{{ old('phone') }}" required>
+                        @error('phone')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
                     {{-- Password --}}
                     <div class="form-group">
                         <label for="password">Password</label>

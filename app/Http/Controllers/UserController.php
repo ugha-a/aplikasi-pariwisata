@@ -33,6 +33,7 @@ class UserController extends Controller
         $user = new User();
         $user->name              = $validated['name'];
         $user->email             = $validated['email'];
+        $user->phone             = $validated['phone'];
         $user->email_verified_at = today();
         $user->password          = Hash::make($validated['password']);
         $user->role              = $validated['role'];          // pastikan kolom `role` ada di tabel users
@@ -48,8 +49,9 @@ class UserController extends Controller
     }
 
      /** Form edit */
-     public function edit(User $user)
+     public function edit(Request $request, $id)
      {
+        $user = User::findOrFail($id);
          return view('users.edit', compact('user'));
      }
  
@@ -66,6 +68,7 @@ class UserController extends Controller
  
          $user->name  = $validated['name'];
          $user->email = $validated['email'];
+         $user->phone = $validated['phone'];
          $user->role  = $validated['role'];
          if (!empty($validated['password'])) {
              $user->password = Hash::make($validated['password']);

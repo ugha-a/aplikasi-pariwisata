@@ -81,7 +81,10 @@
                   <tbody>
                     @foreach($users as $user)
                       @php
-                        $initials = collect(explode(' ', trim($user->name)))->map(fn($p)=>mb_substr($p,0,1))->take(2)->implode('');
+                        $initials = collect(explode(' ', trim($user->name)))
+                          ->map(fn($p) => mb_substr($p, 0, 1))
+                          ->take(2)
+                          ->implode('');
                       @endphp
                       <tr>
                         <td>
@@ -89,17 +92,31 @@
                             <span class="user-avatar">{{ $initials ?: 'U' }}</span>
                             <div>
                               <div class="font-weight-bold text-dark mb-0">{{ $user->name }}</div>
-                              {{-- <small class="text-muted">ID: {{ $user->id }}</small> --}}
                             </div>
                           </div>
                         </td>
                         <td>
                           <a class="email-link" href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                         </td>
-                        <td class="text-nowrap pr-3"></td>
+                        <td class="text-nowrap pr-3">
+                          <a href="{{ route('admin.users.edit', $user) }}" 
+                             class="btn btn-sm btn-light" title="Edit">
+                            <i class="fa fa-edit"></i>
+                          </a>
+                          <form action="{{ route('admin.users.destroy', $user) }}" method="POST" 
+                                class="d-inline-block"
+                                onsubmit="return confirm('Yakin ingin menghapus user ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </form>
+                        </td>
                       </tr>
                     @endforeach
                   </tbody>
+                  
                 </table>
               </div>
               @else
