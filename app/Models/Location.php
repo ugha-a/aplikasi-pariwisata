@@ -11,4 +11,9 @@ class Location extends Model
     protected $guarded = ['id'];
 
     protected $table = 'locatinons';
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user', 'id');
+    }
 }

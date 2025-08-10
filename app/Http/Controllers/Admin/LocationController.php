@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,7 +22,8 @@ class LocationController extends Controller
      */
     public function create()
     {
-        return view('admin.locations.create');
+        $users = User::where('role', 'dinas')->get();
+        return view('admin.locations.create', compact('users'));
     }
 
     /**
@@ -32,11 +34,12 @@ class LocationController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'user' => 'required',
             'lat' => 'required|string',
             'lag' => 'required|string',
         ]);
 
-        $location = Location::create($request->only(['name', 'description', 'lat', 'lag']));
+        $location = Location::create($request->only(['name', 'description', 'lat', 'lag', 'user']));
 
         return redirect()->route('admin.locations.edit', $location->id)->with([
             'message' => 'Successfully created!',
@@ -49,7 +52,8 @@ class LocationController extends Controller
      */
     public function edit(Location $location)
     {
-        return view('admin.locations.edit', compact('location'));
+        $users = User::where('role', 'dinas')->get();
+        return view('admin.locations.edit', compact('location', 'users'));
     }
 
     /**
@@ -60,11 +64,12 @@ class LocationController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'user' => 'required',
             'lat' => 'required|string',
             'lag' => 'required|string',
         ]);
 
-        $location->update($request->only(['name', 'description', 'lat', 'lag']));
+        $location->update($request->only(['name', 'description', 'lat', 'lag', 'user']));
 
         return redirect()->route('admin.locations.index')->with([
             'message' => 'Successfully updated!',

@@ -67,6 +67,7 @@
                       <th>Lokasi</th>
                       <th>Latitude</th>
                       <th>Longitude</th>
+                      <th>Pengelola</th>
                       <th class="text-right" style="width:1%">Aksi</th>
                     </tr>
                   </thead>
@@ -78,6 +79,7 @@
                         <td><span class="coord-badge">{{ $loc->lat }}</span></td>
                         {{-- NOTE: jika field di DB bernama "lng", ganti $loc->lag -> $loc->lng --}}
                         <td><span class="coord-badge">{{ $loc->lag }}</span></td>
+                        <td class="font-weight-bold text-dark">{{ $loc->users?->name ?? '' }}</td>
                         <td class="text-right text-nowrap pr-3">
                           <a href="{{ route('admin.locations.edit', $loc) }}" class="btn btn-sm btn-light">
                             <i class="fa fa-edit"></i>
