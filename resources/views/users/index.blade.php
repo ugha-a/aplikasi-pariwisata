@@ -61,7 +61,7 @@
                   <i class="icon fas fa-search"></i>
                   <input id="userSearch" type="search" class="form-control" placeholder="Cari nama atau email…">
                 </div>
-                <a href="{{ route('admin.travel_packages.create') }}" class="btn btn-primary">
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                   <i class="fas fa-user-plus mr-1"></i> Create User
                 </a>
               </div>

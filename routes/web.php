@@ -32,8 +32,8 @@ Route::group(['middleware' => ['check.role:admin,dinas', 'auth'], 'prefix' => 'a
     Route::resource('locations', \App\Http\Controllers\Admin\LocationController::class)->except('show');
     // profile
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
-    Route::get('users', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
-    Route::post('users', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+    Route::get('users/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
+    Route::post('users/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
 
     Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
