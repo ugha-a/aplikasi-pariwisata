@@ -158,7 +158,7 @@
                         <div class="islands__data" style="z-index: 99; position: relative">
                             <h1 class="islands__title">Sulawesi Tenggara</h1>
                             <p class="islands__description">Selamat datang di wisata Sulawesi Tenggara</p>
-                            <a class="islands__description button button-booking" style="margin-top: 50px">Detail Wisata</a>
+                            <a href="{{ route('travel_package.index') }}" class="islands__description button button-booking" style="margin-top: 50px">Detail Wisata</a>
                         </div>
                     </div>
                 </div>
