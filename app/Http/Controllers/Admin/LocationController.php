@@ -22,7 +22,6 @@ class LocationController extends Controller
      */
     public function create()
     {
-        $users = User::where('role', 'dinas')->get();
         return view('admin.locations.create', compact('users'));
     }
 
@@ -34,12 +33,11 @@ class LocationController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'user' => 'required',
             'lat' => 'required|string',
             'lag' => 'required|string',
         ]);
 
-        $location = Location::create($request->only(['name', 'description', 'lat', 'lag', 'user']));
+        $location = Location::create($request->only(['name', 'description', 'lat', 'lag']));
 
         return redirect()->route('admin.locations.edit', $location->id)->with([
             'message' => 'Successfully created!',
@@ -64,12 +62,11 @@ class LocationController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'user' => 'required',
             'lat' => 'required|string',
             'lag' => 'required|string',
         ]);
 
-        $location->update($request->only(['name', 'description', 'lat', 'lag', 'user']));
+        $location->update($request->only(['name', 'description', 'lat', 'lag']));
 
         return redirect()->route('admin.locations.index')->with([
             'message' => 'Successfully updated!',

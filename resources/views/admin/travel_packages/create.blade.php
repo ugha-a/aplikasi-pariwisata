@@ -44,15 +44,22 @@
                 <div class="form-group col-md-6">
                   <label class="lbl" for="Location">Lokasi <span class="req">*</span></label>
                   <div class="input-group input-neo @error('location') has-error @enderror">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class='fas fa-map-marker-alt'></i></span>
-                    </div>
-                    <input type="text" name="location" id="Location" class="form-control"
-                           placeholder="Contoh: Kendari, Wakatobi"
-                           value="{{ old('location') }}" required>
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class='fas fa-map-marker-alt'></i></span>
+                      </div>
+                      <select name="location" id="Location" class="form-control" required>
+                          <option value="">-- Pilih Lokasi --</option>
+                          @foreach($locations as $loc)
+                              <option value="{{ $loc->id }}" {{ old('location') == $loc->id ? 'selected' : '' }}>
+                                  {{ $loc->name }}
+                              </option>
+                          @endforeach
+                      </select>
                   </div>
-                  @error('location') <small class="text-danger">{{ $message }}</small> @enderror
-                </div>
+                  @error('location')
+                      <small class="text-danger">{{ $message }}</small>
+                  @enderror
+              </div>
               </div>
 
               <div class="form-row">
@@ -70,6 +77,26 @@
                   <small class="form-text text-muted">Ketik angka saja, otomatis jadi format Rupiah.</small>
                   @error('price') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
+
+                <div class="form-group col-md-6">
+                  <label class="lbl" for="Location">Pengelola <span class="req">*</span></label>
+                  <div class="input-group input-neo @error('location') has-error @enderror">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"> <i class="fas fa-user-tie"></i></span>
+                      </div>
+                      <select name="location" id="Location" class="form-control" required>
+                          <option value="">-- Pilih User --</option>
+                          @foreach($locations as $loc)
+                              <option value="{{ $loc->id }}" {{ old('location') == $loc->id ? 'selected' : '' }}>
+                                  {{ $loc->name }}
+                              </option>
+                          @endforeach
+                      </select>
+                  </div>
+                  @error('location')
+                      <small class="text-danger">{{ $message }}</small>
+                  @enderror
+              </div>
               </div>
 
               {{-- DESKRIPSI --}}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
 use Illuminate\Http\Request;
 use App\Models\TravelPackage;
 
@@ -10,8 +11,9 @@ class TravelPackageController extends Controller
     public function index()
     {
         $travel_packages = TravelPackage::with('galleries')->get();
+        $locations = Location::all(['name']);
 
-        return view('travel_packages.index', compact('travel_packages'));
+        return view('travel_packages.index', compact('travel_packages', 'locations'));
     }
 
     public function show(TravelPackage $travel_package)

@@ -43,7 +43,7 @@
               </div>
 
               <!-- User Pemilik/PIC -->
-              <div class="form-group col-md-6">
+              {{-- <div class="form-group col-md-6">
                 <label for="user" class="font-weight-semibold">Pengelola</label>
                 <select id="user" name="user"
                         class="form-control select2 @error('user') is-invalid @enderror" required>
@@ -57,7 +57,7 @@
                 @error('user') <small class="text-danger">{{ $message }}</small> @enderror
                 <small class="form-text text-muted">Hubungkan lokasi dengan user (admin/dinas) yang bertanggung jawab.</small>
               </div>
-            </div>
+            </div> --}}
 
             <!-- Deskripsi -->
             <div class="form-group">

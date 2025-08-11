@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Gallery;
+use App\Models\Location;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TravelPackage;
@@ -26,7 +27,8 @@ class TravelPackageController extends Controller
      */
     public function create()
     {
-        return view('admin.travel_packages.create');
+        $locations = Location::all(['name']);
+        return view('admin.travel_packages.create', compact('locations'));
     }
 
     /**

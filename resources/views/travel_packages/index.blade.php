@@ -7,37 +7,38 @@
 
     {{-- FILTER & SEARCH BAR --}}
     <div class="popular__filter-bar">
-      <form method="GET" action="" class="popular__filter-form">
+      <form id="filterForm" class="popular__filter-form"> {{-- <- hapus method/action, cukup client-side --}}
         <div class="field-with-icon">
           <i class="bx bx-search"></i>
-          <input type="text" name="search" class="popular__search-input"
+          <input id="qSearch" type="text" class="popular__search-input"
                  placeholder="Cari nama wisata atau lokasi..." value="{{ request('search') }}" />
         </div>
-
-        <select name="lokasi" class="popular__filter-select">
+    
+        {{-- Opsional dropdown lokasi (boleh diaktifkan nanti) --}}
+        
+        <select id="filterLokasi" class="popular__filter-select">
           <option value="">Semua Lokasi</option>
-          {{-- @foreach ($locations as $loc) --}}
-          {{-- <option value="{{ $loc }}" {{ request('lokasi')==$loc?'selected':'' }}>{{ $loc }}</option> --}}
-          {{-- @endforeach --}}
+          @foreach ($locations as $loc)
+            <option value="{{ strtolower($loc->name) }}">{{ $loc->name }}</option>
+          @endforeach
         </select>
-
+       
+    
         <button type="submit" class="btn-search"><i class="bx bx-search"></i> Cari</button>
       </form>
     </div>
-
+    
     {{-- GRID KARTU --}}
     <div class="cards-grid">
       @forelse ($travel_packages as $tp)
-        <article class="place-card">
+        <article class="place-card"
+                 data-name="{{ strtolower($tp->location.' '.$tp->type) }}"
+                 data-location="{{ strtolower($tp->location) }}">
           <a href="{{ route('travel_package.show', $tp->slug) }}" class="card-link">
-            {{-- MEDIA: SLIDER GAMBAR --}}
             <div class="card-media">
               <div class="swiper card-swiper" id="swiper-{{ $tp->id }}">
                 <div class="swiper-wrapper">
-                  @php
-                    $slides = $tp->galleries ?? collect();
-                  @endphp
-
+                  @php $slides = $tp->galleries ?? collect(); @endphp
                   @if($slides->count())
                     @foreach($slides as $g)
                       <div class="swiper-slide">
@@ -55,25 +56,13 @@
                 </div>
               </div>
             </div>
-
-            {{-- BODY --}}
+    
             <div class="card-body">
               <h3 class="card-title">{{ $tp->location }}</h3>
               <p class="card-sub">{{ $tp->type }}</p>
-
               <div class="card-meta">
-                <div class="rating">
-                  {{-- <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star-half"></i>
-                  <span class="muted">(20 Review)</span> --}}
-                </div>
-
-                <div class="price">
-                  <span class="rp">Rp</span>{{ convertToIDR($tp->price) }}
-                </div>
+                <div></div>
+                <div class="price"><span class="rp">Rp</span>{{ convertToIDR($tp->price) }}</div>
               </div>
             </div>
           </a>
@@ -152,16 +141,49 @@
 <script src="https://unpkg.com/swiper@9/swiper-bundle.min.js"></script>
 <script>
   // Inisialisasi semua slider pada halaman
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.card-swiper').forEach(function(el){
-      new Swiper(el, {
-        loop: true,
-        speed: 1000,
-        autoplay: { delay: 3500, disableOnInteraction: false }, // ganti setiap 1 detik
-        slidesPerView: 1,
-        effect: 'slide'
-      });
+  document.addEventListener('DOMContentLoaded', () => {
+  // Inisialisasi semua slider pada halaman
+  document.querySelectorAll('.card-swiper').forEach(el=>{
+    new Swiper(el, {
+      loop: true,
+      speed: 600,
+      autoplay: { delay: 1000, disableOnInteraction: false },
+      slidesPerView: 1,
+      effect: 'slide'
     });
+  });
+
+  /* ======== LIVE FILTER ======== */
+  const form   = document.getElementById('filterForm');
+  const input  = document.getElementById('qSearch');
+  const select = document.getElementById('filterLokasi'); // bisa null kalau dropdown dimatikan
+  const cards  = Array.from(document.querySelectorAll('.place-card'));
+
+  const norm = s => (s||'').toString().toLowerCase().trim();
+
+  function applyFilter() {
+    const q   = norm(input?.value);
+    const loc = norm(select?.value);
+
+    cards.forEach(card => {
+      const name = card.dataset.name || '';
+      const location = card.dataset.location || '';
+      const matchText = !q   || name.includes(q) || location.includes(q);
+      const matchLoc  = !loc || location === loc;
+      card.style.display = (matchText && matchLoc) ? '' : 'none';
+    });
+  }
+
+  // Cegah submit (biar tidak reload)
+  form?.addEventListener('submit', e => e.preventDefault());
+
+  // Live: ketik/ubah langsung filter
+  input?.addEventListener('input', applyFilter);
+  select?.addEventListener('change', applyFilter);
+
+  // Jalan sekali saat load
+  applyFilter();
+
   });
 </script>
 @endpush
