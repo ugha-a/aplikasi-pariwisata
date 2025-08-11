@@ -63,12 +63,12 @@
 
               <div class="card-meta">
                 <div class="rating">
-                  <i class="bx bxs-star"></i>
+                  {{-- <i class="bx bxs-star"></i>
                   <i class="bx bxs-star"></i>
                   <i class="bx bxs-star"></i>
                   <i class="bx bxs-star"></i>
                   <i class="bx bxs-star-half"></i>
-                  <span class="muted">(20 Review)</span>
+                  <span class="muted">(20 Review)</span> --}}
                 </div>
 
                 <div class="price">
