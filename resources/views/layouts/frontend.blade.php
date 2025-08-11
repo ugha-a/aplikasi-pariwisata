@@ -21,21 +21,39 @@
 <link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
 <style>
-  /* Brand Colors */
   :root {
     --primary-color: #3366FF;
     --accent-color: #FF6600;
     --header-bg: #fff;
     --header-shadow: rgba(0, 0, 0, 0.1);
+    --header-height: 72px; /* default desktop */
+  }
+  @media (max-width: 768px) {
+    :root {
+      --header-height: 64px; /* mobile */
+    }
   }
 
-  /* Always-white header with shadow */
+  /* Navbar selalu fixed */
   .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
     background-color: var(--header-bg) !important;
     box-shadow: 0 2px 4px var(--header-shadow);
-    transition: background .3s, box-shadow .3s;
     z-index: 1000;
+    display: flex;
+    align-items: center;
   }
+
+  /* Konten diberi jarak agar tidak ketutup navbar */
+  .main {
+    padding-top: var(--header-height);
+  }
+
+  /* Warna teks di navbar */
   .header .nav__logo,
   .header .nav__link,
   .header .change-theme {
@@ -106,7 +124,7 @@
     color: #fff;
   }
   .btn-primary:hover {
-    background-color: darken(var(--primary-color), 10%);
+    background-color: #254ecf;
   }
 
   /* Popular Section */
@@ -119,6 +137,8 @@
     border-radius: 0.5rem;
     overflow: hidden;
     transition: transform .3s;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
   .popular__card:hover {
     transform: translateY(-5px);
@@ -126,6 +146,8 @@
   .popular__img {
     width: 100%;
     border-radius: 0.5rem 0.5rem 0 0;
+    display: block;
+    object-fit: cover;
   }
   .popular__data {
     padding: 1rem;
@@ -133,7 +155,8 @@
   }
 
   /* Swiper Controls */
-  .swiper-button-prev, .swiper-button-next {
+  .swiper-button-prev,
+  .swiper-button-next {
     color: var(--primary-color) !important;
   }
   .swiper-pagination-bullet-active {

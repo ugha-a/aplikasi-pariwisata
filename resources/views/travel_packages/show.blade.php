@@ -12,7 +12,7 @@
                 @if($g->name)
                   <div class="hero-caption container">
                     <span class="caption-sub">Explore</span>
-                    <h1 class="caption-title">{{ $g->name }}</h1>
+                    <h1 class="caption-title">{{ $travel_package->name ?? 'Lokasi' }}</h1>
                   </div>
                 @endif
               </div>
@@ -24,7 +24,7 @@
                   <div class="hero-overlay"></div>
                   <div class="hero-caption container">
                     <span class="caption-sub">Explore</span>
-                    <h1 class="caption-title">{{ $travel_package->location }}</h1>
+                    <h1 class="caption-title">{{ optional($travel_package->locations)->name ?? 'Lokasi' }}</h1>
                   </div>
                 </div>
               @endforeach
@@ -76,13 +76,18 @@
           </div>
         </article>
 
+        @php
+            $lat = $travel_package->lat ?? $travel_package->latitude ?? -3.9917;
+            $lng = $travel_package->lng ?? $travel_package->longitude ?? 122.5120;
+            $locName = optional($travel_package->locations)->name ?? 'Lokasi';
+          @endphp
         <!-- Kanan: Peta -->
         <aside class="card map-card">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h3 class="card-title m-0">Lokasi</h3>
             <a target="_blank"
-               href="https://www.google.com/maps/search/?api=1&query={{ ($travel_package->lat ?? $travel_package->latitude ?? -3.9917) }},{{ ($travel_package->lag ?? $travel_package->lng ?? $travel_package->longitude ?? 122.5120) }}"
-               class="small-link">Buka di Google Maps →</a>
+                href="https://www.google.com/maps/search/?api=1&query={{ $lat }},{{ $lng }}"
+                class="small-link">Buka di Google Maps →</a>
           </div>
           <div id="miniMap"></div>
           @if(!empty($travel_package->address))
@@ -150,14 +155,25 @@
         </div>
 
         <!-- Footer card: tombol WA dinas -->
-        @php
-          $wa = $dinasPhone ?? '6282281813799'; // ganti ke nomor dinas kamu (format internasional, tanpa +)
-          $waText = urlencode('Halo, saya ingin memesan paket: '.$travel_package->location);
+          @php
+            // Ambil nomor, fallback ke default
+            $waRaw = $travel_package->users->phone;
+
+            // Bersihkan spasi dan karakter non-digit
+            $waClean = preg_replace('/\D/', '', trim($waRaw));
+
+            // Ubah 0 diawal jadi 62
+            if (strpos($waClean, '0') === 0) {
+                $waClean = '62' . substr($waClean, 1);
+            }
+
+            $wa = $waClean;
+            $waText = urlencode('Halo, saya ingin memesan paket: ' . ($travel_package->name ?? ''));
         @endphp
         <div class="card-footer d-flex justify-content-between align-items-center">
-          <div class="small text-muted">Butuh bantuan cepat? Hubungi dinas via WhatsApp.</div>
+          <div class="small text-muted">Butuh bantuan cepat? Hubungi pengelola wisata via WhatsApp.</div>
           <a class="btn btn-success" target="_blank" href="https://wa.me/{{ $wa }}?text={{ $waText }}">
-            <i class="bx bxl-whatsapp mr-1"></i> WhatsApp Dinas
+            <i class="bx bxl-whatsapp mr-1"></i> WhatsApp Pengelola Wisata
           </a>
         </div>
       </div>
@@ -270,14 +286,14 @@
 @endpush
 
 @push('script-alt')
-  {{-- Leaflet JS --}}
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    /* ==================== SWIPER ==================== */
-    const topEl    = document.querySelector('.gallery-top');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+ /* ==================== SWIPER ==================== */
+ const topEl    = document.querySelector('.gallery-top');
     const thumbsEl = document.querySelector('.gallery-thumbs');
     const hasSwiper = typeof window.Swiper !== 'undefined';
 
@@ -311,21 +327,30 @@
         new Swiper('.gallery-top', heroOpts);
     }
 
-    /* ==================== LEAFLET MINI MAP ==================== */
-    const mapEl = document.getElementById('miniMap');
+  /* ==================== LEAFLET MINI MAP ==================== */
+  const mapEl = document.getElementById('miniMap');
     if (mapEl && window.L) {
-        const lat = parseFloat(@json($travel_package->lat ?? $travel_package->latitude ?? -3.9917));
-        const lng = parseFloat(@json($travel_package->lag ?? $travel_package->lng ?? $travel_package->longitude ?? 122.5120));
+      let lat = @json((float)($lat ?? -3.9917));
+      let lng = @json((float)($lng ?? 122.5120));
+      const locName = @json($locName);
 
-        const map = L.map('miniMap', { scrollWheelZoom: false }).setView([lat, lng], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // Debug DI DALAM BLOK yang sama ✅
+      console.log({ lat, lng, locName });
+
+      // Guard kalau hasilnya NaN
+      if (!isFinite(lat)) lat = -3.9917;
+      if (!isFinite(lng)) lng = 122.5120;
+
+      const map = L.map('miniMap', { scrollWheelZoom: false }).setView([lat, lng], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
-        L.marker([lat, lng]).addTo(map).bindPopup(`{{ $travel_package->location }}`).openPopup();
+      }).addTo(map);
+
+      L.marker([lat, lng]).addTo(map).bindPopup(locName).openPopup();
     }
 
-    /* ==================== BOOKING PANEL TOGGLE ==================== */
+   /* ==================== BOOKING PANEL TOGGLE ==================== */
     const panel     = document.getElementById('bookingPanel');
     const openBtn   = document.getElementById('btnPesan');
     const closeBtn  = document.getElementById('closePanel');
@@ -343,5 +368,5 @@
     const alertBox   = document.getElementById('alert');
     alertClose?.addEventListener('click', () => { if (alertBox) alertBox.style.display = 'none'; });
     });
-    </script>
+</script>
 @endpush
