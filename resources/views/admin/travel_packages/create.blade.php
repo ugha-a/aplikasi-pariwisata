@@ -24,8 +24,19 @@
           <div class="card-body p-4">
             <form method="POST" action="{{ route('admin.travel_packages.store') }}" id="tpForm" novalidate>
               @csrf
-
               <div class="form-row">
+                <div class="form-group col-12">
+                    <label class="lbl" for="name">Nama <span class="req">*</span></label>
+                    <div class="input-group input-neo @error('name') has-error @enderror">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class='fas fa-file-signature'></i></span>
+                        </div>
+                        <input type="text" name="name" id="name" class="form-control"
+                              placeholder="Masukkan nama paket wisata"
+                              value="{{ old('name') }}" required>
+                    </div>
+                    @error('name') <small class="text-danger">{{ $message }}</small> @enderror
+                  </div>
                 {{-- TIPE --}}
                 <div class="form-group col-md-6">
                   <label class="lbl" for="type">Tipe <span class="req">*</span></label>

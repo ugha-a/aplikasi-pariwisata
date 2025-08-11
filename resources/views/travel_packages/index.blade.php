@@ -59,7 +59,7 @@
               <p class="card-sub">{{ $tp->type }}</p>
               <div class="card-meta">
                 <div></div>
-                <div class="price"><span class="rp">Rp</span>{{ convertToIDR($tp->price) }}</div>
+                {{-- <div class="price"><span class="rp">Rp</span>{{ convertToIDROnPage($tp->price) }}</div> --}}
               </div>
             </div>
           </a>

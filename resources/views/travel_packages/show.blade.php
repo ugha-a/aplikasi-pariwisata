@@ -72,7 +72,7 @@
 
           <div class="price-pill mt-3">
             <span>Harga tiket:</span>
-            <strong>Rp {{ convertToIDR($travel_package->price) }}</strong>
+            <strong>Rp {{ convertToIDR($travel_package->price, false) }}</strong>
           </div>
         </article>
 
@@ -179,7 +179,7 @@
               @endif
               <div class="popular__data">
                 <h2 class="popular__price">
-                  <span>Rp</span>{{ convertToIDR($tp->price) }}
+                  <span>Rp</span>{{ convertToIDR($tp->pric, false) }}
                 </h2>
                 <h3 class="popular__title">{{ $tp->location }}</h3>
                 <p class="popular__description">{{ $tp->type }}</p>

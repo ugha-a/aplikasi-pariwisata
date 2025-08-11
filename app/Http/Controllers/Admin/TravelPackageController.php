@@ -27,7 +27,7 @@ class TravelPackageController extends Controller
      */
     public function create()
     {
-        $locations = Location::all(['name']);
+        $locations = Location::all(['name', 'id']);
         return view('admin.travel_packages.create', compact('locations'));
     }
 
@@ -54,8 +54,9 @@ class TravelPackageController extends Controller
     public function edit(TravelPackage $travel_package)
     {
         $galleries = Gallery::paginate(10);
+        $locations = Location::all(['name', 'id']);
         
-        return view('admin.travel_packages.edit', compact('travel_package','galleries'));
+        return view('admin.travel_packages.edit', compact('travel_package','galleries', 'locations'));
     }
 
     /**

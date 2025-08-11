@@ -10,7 +10,7 @@
             <h1 class="m-0">Edit Paket Wisata</h1>
             <small class="text-muted">Kelola galeri dan detail paket</small>
           </div>
-          <a href="{{ route('admin.travel_packages.index') }}" class="btn btn-primary">
+          <a href="{{ route('admin.travel_packages.index') }}" class="btn btn-light border">
             <i class="fa fa-arrow-left mr-1"></i> Kembali
           </a>
         </div>
@@ -73,13 +73,13 @@
           <form method="post" action="{{ route('admin.travel_packages.galleries.store', [$travel_package]) }}" enctype="multipart/form-data" class="row">
             @csrf
             <div class="form-group col-md-6">
-              <label for="name">Nama Gambar</label>
+              <label class="lbl" for="name">Nama Gambar</label>
               <input type="text" class="form-control @error('name') is-invalid @enderror"
                      name="name" id="name" value="{{ old('name') }}" placeholder="Contoh: Sunset Wakatobi">
               @error('name') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
             <div class="form-group col-md-6">
-              <label for="images">File Gambar</label>
+              <label class="lbl" for="images">File Gambar</label>
               <div class="custom-file">
                 <input type="file" class="custom-file-input @error('images') is-invalid @enderror" name="images" id="images" accept="image/*">
                 <label class="custom-file-label" for="images">Pilih file…</label>
@@ -98,83 +98,128 @@
         </div>
       </div>
 
-      {{-- ========== FORM PAKET ========== --}}
+      {{-- ========== FORM PAKET (match form create) ========== --}}
       <div class="card card-neo">
         <div class="card-header">
           <h5 class="m-0">Detail Paket</h5>
         </div>
         <div class="card-body">
-          <form method="post" action="{{ route('admin.travel_packages.update', [$travel_package]) }}" class="row">
+          <form method="POST" action="{{ route('admin.travel_packages.update', [$travel_package]) }}" id="tpForm" novalidate class="row">
             @csrf
             @method('put')
 
+            {{-- NAMA --}}
+            <div class="form-group col-12">
+              <label class="lbl" for="tp_name">Nama <span class="req">*</span></label>
+              <div class="input-group input-neo @error('name') has-error @enderror">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class='fas fa-file-signature'></i></span>
+                </div>
+                <input type="text" name="name" id="tp_name" class="form-control"
+                       placeholder="Masukkan nama paket wisata"
+                       value="{{ old('name', $travel_package->name) }}" required>
+              </div>
+              @error('name') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- TIPE --}}
             <div class="form-group col-md-6">
-              <label for="type">Tipe</label>
-              <input type="text" class="form-control @error('type') is-invalid @enderror"
-                     name="type" id="type" value="{{ old('type', $travel_package->type) }}"
-                     placeholder="Contoh: 3D2N">
+              <label class="lbl" for="type">Tipe <span class="req">*</span></label>
+              <div class="input-group input-neo @error('type') has-error @enderror">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class='fas fa-tag'></i></span>
+                </div>
+                <input type="text" name="type" id="type" class="form-control"
+                       placeholder="Contoh: Package 1 / Open Trip / Private"
+                       value="{{ old('type', $travel_package->type) }}" required>
+              </div>
               @error('type') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
 
-            {{-- Lokasi: dropdown (gunakan salah satu versi A/B) --}}
-            {{-- A) Dropdown dari collection $locations (kirim dari controller) --}}
-            @if(!empty($locations ?? null))
-              <div class="form-group col-md-6">
-                <label for="Location">Lokasi</label>
-                <select name="location" id="Location" class="form-control @error('location') is-invalid @enderror">
+            {{-- LOKASI (dropdown id->name, sama seperti create) --}}
+            <div class="form-group col-md-6">
+              <label class="lbl" for="Location">Lokasi <span class="req">*</span></label>
+              <div class="input-group input-neo @error('location') has-error @enderror">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class='fas fa-map-marker-alt'></i></span>
+                </div>
+                <select name="location" id="Location" class="form-control" required>
                   <option value="">-- Pilih Lokasi --</option>
                   @foreach($locations as $loc)
-                    <option value="{{ $loc }}" {{ old('location', $travel_package->location) == $loc ? 'selected' : '' }}>
-                      {{ $loc }}
+                    <option value="{{ $loc->id }}"
+                      {{ (string)old('location', $travel_package->location_id ?? $travel_package->location) === (string)$loc->id ? 'selected' : '' }}>
+                      {{ $loc->name }}
                     </option>
                   @endforeach
                 </select>
-                @error('location') <small class="text-danger">{{ $message }}</small> @enderror
               </div>
-            @else
-            {{-- B) Tetap input text jika belum ada $locations --}}
-              <div class="form-group col-md-6">
-                <label for="Location">Lokasi</label>
-                <input type="text" class="form-control @error('location') is-invalid @enderror"
-                       id="Location" name="location"
-                       value="{{ old('location', $travel_package->location) }}"
-                       placeholder="Contoh: Wakatobi, Kendari">
-                @error('location') <small class="text-danger">{{ $message }}</small> @enderror
-              </div>
-            @endif
+              @error('location') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
 
+            {{-- HARGA (IDR) pakai format Rupiah seperti create --}}
             <div class="form-group col-md-6">
-              <label for="price">Harga</label>
-              <div class="input-group @error('price') has-error @enderror">
+              <label class="lbl" for="price">Harga (IDR) <span class="req">*</span></label>
+              <div class="input-group input-neo @error('price') has-error @enderror">
                 <div class="input-group-prepend">
                   <span class="input-group-text">Rp</span>
                 </div>
-                <input type="number" min="0" class="form-control @error('price') is-invalid @enderror"
-                       id="price" name="price" value="{{ old('price', $travel_package->price) }}"
-                       placeholder="Contoh: 250000">
+                <input type="text" inputmode="numeric" name="price" id="price"
+                       class="form-control" placeholder="Masukkan harga"
+                       value="{{ old('price', number_format((int)$travel_package->price, 0, ',', '.')) }}" required>
               </div>
+              <small class="form-text text-muted">Ketik angka saja, otomatis jadi format Rupiah.</small>
               @error('price') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
 
+            {{-- PENGELOLA (samakan struktur dengan create) --}}
+            <div class="form-group col-md-6">
+              <label class="lbl" for="Manager">Pengelola <span class="req">*</span></label>
+              <div class="input-group input-neo @error('manager') has-error @enderror">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                </div>
+                {{-- NOTE: ganti $managers & name="manager" sesuai sumber data kamu.
+                     Diset agar tidak bentrok dengan "location" seperti di form create awal. --}}
+                <select name="manager" id="Manager" class="form-control" required>
+                  <option value="">-- Pilih User --</option>
+                  @foreach(($managers ?? []) as $mgr)
+                    <option value="{{ $mgr->id }}"
+                      {{ (string)old('manager', $travel_package->manager_id ?? '') === (string)$mgr->id ? 'selected' : '' }}>
+                      {{ $mgr->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+              @error('manager') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- DESKRIPSI + counter (CKEditor) --}}
             <div class="form-group col-12">
-              <label for="description">Deskripsi</label>
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="lbl" for="description">Deskripsi <span class="req">*</span></label>
+                <small id="descCount" class="text-muted">0/500</small>
+              </div>
               <textarea class="form-control @error('description') is-invalid @enderror"
-                        name="description" id="description" rows="7"
-                        placeholder="Masukkan deskripsi">{{ old('description', $travel_package->description) }}</textarea>
-              @error('description') <small class="text-danger">{{ $message }}</small> @enderror
+                        id="description" name="description" rows="6"
+                        placeholder="Tulis gambaran singkat paket wisata (maks 500 karakter)" required>{{ old('description', $travel_package->description) }}</textarea>
+              @error('description') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
             </div>
 
+            {{-- FASILITAS + counter (CKEditor) --}}
             <div class="form-group col-12">
-              <label for="facility">Fasilitas</label>
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="lbl" for="facility">Fasilitas</label>
+                <small id="facilityCount" class="text-muted">0/500</small>
+              </div>
               <textarea class="form-control @error('facility') is-invalid @enderror"
-                        name="facility" id="facility" rows="6"
-                        placeholder="Masukkan fasilitas">{{ old('facility', $travel_package->facility) }}</textarea>
-              @error('facility') <small class="text-danger">{{ $message }}</small> @enderror
+                        id="facility" name="facility" rows="6"
+                        placeholder="Contoh: Transportasi, Makan siang, Guide, Tiket masuk, dll.">{{ old('facility', $travel_package->facility) }}</textarea>
+              @error('facility') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
             </div>
 
-            <div class="col-12">
-              <button type="submit" class="btn btn-success">
-                <i class="fa fa-save mr-1"></i> Simpan Perubahan
+            <div class="col-12 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary btn-neo">
+                <i class="fas fa-save mr-1"></i> Simpan Perubahan
               </button>
             </div>
           </form>
@@ -187,8 +232,37 @@
 
 @section('styles')
 <style>
-  :root { --brand:#3366FF; --ink:#22346c; --soft:#eaf1ff; }
-  .card-neo{ border:1px solid #f1f3fa; border-radius:14px; box-shadow:0 10px 28px rgba(51,102,255,.06); }
+  :root{
+    --brand:#3366FF;
+    --soft:#eaf1ff;
+    --ink:#233273;
+  }
+  .card-neo{
+    border: 1px solid #f1f3fa;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(51,102,255,.06);
+  }
+  .lbl{ font-weight:600;color:#22346c;margin-bottom:.35rem; }
+  .req{ color:#ff6a00; }
+  .input-neo .input-group-text{
+    background:#f6faff;border:1px solid #dde7ff;color:var(--brand);
+  }
+  .input-neo .form-control{
+    border:1px solid #dde7ff;background:#fff;transition:box-shadow .15s,border .15s;
+  }
+  .input-neo .form-control:focus{
+    border-color: var(--brand);
+    box-shadow: 0 0 0 .15rem rgba(51,102,255,.15);
+  }
+  .has-error .form-control{ border-color:#ff6b6b; }
+  .btn-neo{
+    background:var(--brand);border:none;
+    box-shadow:0 6px 18px rgba(51,102,255,.2);
+  }
+  .btn-neo:hover{ background:#254ecf; }
+  #descCount,#facilityCount{ font-size:.85rem }
+
+  /* Galeri */
   .gallery-grid{
     display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
     gap:1rem;
@@ -208,15 +282,66 @@
 @endsection
 
 @section('scripts')
-  {{-- CKEditor --}}
-  <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+  {{-- CKEditor (samakan versi dgn create) --}}
+  <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
   <script>
-    // CKEditor untuk dua field
-    ['#description','#facility'].forEach(sel=>{
-      const el = document.querySelector(sel);
-      if(el){
-        ClassicEditor.create(el).catch(console.error);
+    // --- CKEditor init + live counter (match create)
+    const editors = {};
+    function initEditor(selector, onChangeCb){
+      return ClassicEditor.create(document.querySelector(selector),{
+        toolbar: ['heading','bold','italic','bulletedList','numberedList','link','blockQuote','undo','redo']
+      }).then(ed=>{
+        editors[selector]=ed;
+        ed.model.document.on('change:data', ()=> onChangeCb(ed.getData()));
+      }).catch(console.error);
+    }
+
+    const limit = 500;
+    const countText = html => (new DOMParser).parseFromString(html,'text/html').body.textContent || '';
+    const setCounter = (elId, html) => {
+      const text = countText(html).trim();
+      const n = text.length;
+      const el = document.getElementById(elId);
+      el.textContent = `${n}/${limit}`;
+      el.style.color = n>limit ? '#ff4d4d' : '#6c757d';
+    };
+
+    // Init editors + counters
+    initEditor('#description', html=> setCounter('descCount', html)).then(()=>{
+      setCounter('descCount', editors['#description']?.getData()||'');
+    });
+    initEditor('#facility', html=> setCounter('facilityCount', html)).then(()=>{
+      setCounter('facilityCount', editors['#facility']?.getData()||'');
+    });
+
+    // --- Rupiah formatter (harga)
+    const price = document.getElementById('price');
+    const toRupiah = (v)=>{
+      v = (v+'').replace(/[^\d]/g,'');
+      if(!v) return '';
+      return v.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    };
+    const fromRupiah = v => (v+'').replace(/\./g,'');
+
+    if(price){
+      // format initial value (if controller belum format)
+      price.value = toRupiah(price.value);
+      price.addEventListener('input', ()=>{
+        price.value = toRupiah(price.value);
+        price.selectionStart = price.selectionEnd = price.value.length;
+      });
+    }
+
+    // --- Client-side checks before submit
+    document.getElementById('tpForm').addEventListener('submit', (e)=>{
+      const descTxt = countText(editors['#description']?.getData()||'');
+      if(descTxt.length > limit){
+        e.preventDefault();
+        alert('Deskripsi melebihi 500 karakter.');
+        return;
       }
+      // convert price to raw number
+      if(price) price.value = fromRupiah(price.value);
     });
 
     // Preview file gambar + update label

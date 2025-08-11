@@ -38,6 +38,25 @@
 
   .text-muted-sm{ color:#6c7493; font-size:.92rem; }
   .actions .btn{ margin-right:.25rem; }
+
+  /* Status cell: badge + meta */
+.status-cell .badge-soft{
+  display:inline-block;
+  border-radius:.55rem;
+  font-weight:700;
+  font-size:.82rem;
+  padding:.38rem .62rem;
+}
+.status-meta{
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+  margin-top:.3rem;
+  color:#6c7493;
+  font-size:.82rem;
+  letter-spacing:.1px;
+}
+.status-meta i{ opacity:.7; }
 </style>
 @endsection
 
@@ -68,10 +87,10 @@
                        style="padding-left:2.2rem; border-radius:.6rem; border:1px solid #e7ecf5; background:#f8faff;">
               </div>
           
-              <a class="btn" href="{{ route('excel.export.pemesanan') }}"
+              {{-- <a class="btn" href="{{ route('excel.export.pemesanan') }}"
                  style="background:#3366FF; border-color:#3366FF; color:#fff; box-shadow:0 4px 12px rgba(51,102,255,.16);">
                 <i class="fas fa-file-excel mr-1"></i> Export Excel
-              </a>
+              </a> --}}
             </div>
           
             {{-- Tabel --}}
@@ -111,16 +130,15 @@
                           catch (\Exception $e) { echo e($booking->date); }
                         @endphp
                       </td>
-                      <td>
-                        <span class="badge-soft {{ $cls }}"
-                              style="padding:.4rem .6rem; border-radius:.5rem; font-weight:600; font-size:.8rem;
-                                     @switch($cls)
-                                       @case('pending')  background:#fff7e6; color:#b26c00; border:1px solid #ffe1b3; @break
-                                       @case('rejected') background:#ffecec; color:#b02a37; border:1px solid #ffc9c9; @break
-                                       @default           background:#eaf1ff; color:#3366FF; border:1px solid #cfe0ff;
-                                     @endswitch">
+                      <td class="status-cell">
+                        <span class="badge-soft {{ $cls }}">
                           {{ $label }}
                         </span>
+                      
+                        <div class="status-meta">
+                          <i class="fas fa-user-shield"></i>
+                          <span>oleh: {{ $booking->processedBy->name ?? 'Admin' }}</span>
+                        </div>
                       </td>
                       <td>{{ $booking->travel_package->location }}</td>
                       <td class="actions">
