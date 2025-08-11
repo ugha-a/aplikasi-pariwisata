@@ -75,6 +75,7 @@
               <option value="">-- Pilih Role --</option>
               <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
               <option value="dinas" {{ old('role', $user->role) === 'dinas' ? 'selected' : '' }}>Dinas</option>
+              <option value="pengelola" {{ old('role', $user->role) === 'pengelola' ? 'selected' : '' }}>Pengelola</option>
             </select>
             @error('role')
               <small class="text-danger">{{ $message }}</small>
