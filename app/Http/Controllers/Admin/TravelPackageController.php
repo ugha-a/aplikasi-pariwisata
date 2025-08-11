@@ -18,7 +18,11 @@ class TravelPackageController extends Controller
      */
     public function index()
     {
-        $travel_packages = TravelPackage::with(['locations', 'users'])->paginate(10);
+        $query = TravelPackage::with(['locations', 'users']);
+        if (auth()->user()->role === 'pengelola') {
+            $query->where('user_id', auth()->user()->id);
+        }
+        $travel_packages = $query->paginate(10);
 
         return view('admin.travel_packages.index', compact('travel_packages'));
     }

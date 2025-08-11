@@ -18,7 +18,7 @@ use App\Http\Controllers\FavoriteLaporanController;
 
 Auth::routes(['register' => false]);
 
-Route::group(['middleware' => ['check.role:admin,dinas', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group(['middleware' => ['check.role:admin,dinas,pengelola', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     // booking

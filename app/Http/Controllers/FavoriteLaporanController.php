@@ -18,8 +18,17 @@ class FavoriteLaporanController extends Controller
 
     public function index() 
     {
-        $topBooking = Booking::with('travel_package')
-            ->selectRaw('travel_package_id, COUNT(*) as total')
+        $topBookingQuery = Booking::with('travel_package')
+            ->selectRaw('travel_package_id, COUNT(*) as total');
+
+        // Jika user login adalah pengelola
+        if (auth()->user()->role === 'pengelola') {
+            $topBookingQuery->whereHas('travel_package', function ($q) {
+                $q->where('user_id', auth()->id()); // sesuaikan nama kolom pengelola
+            });
+        }
+
+        $topBooking = $topBookingQuery
             ->groupBy('travel_package_id')
             ->orderByDesc('total')
             ->take(5)
