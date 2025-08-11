@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Gallery;
 use App\Models\Location;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ class TravelPackageController extends Controller
      */
     public function index()
     {
-        $travel_packages = TravelPackage::paginate(10);
+        $travel_packages = TravelPackage::with(['locations', 'users'])->paginate(10);
 
         return view('admin.travel_packages.index', compact('travel_packages'));
     }
@@ -28,7 +29,8 @@ class TravelPackageController extends Controller
     public function create()
     {
         $locations = Location::all(['name', 'id']);
-        return view('admin.travel_packages.create', compact('locations'));
+        $users = User::query()->where('role', 'pengelola')->get(['name', 'id']);
+        return view('admin.travel_packages.create', compact('locations', 'users'));
     }
 
     /**
@@ -55,8 +57,9 @@ class TravelPackageController extends Controller
     {
         $galleries = Gallery::paginate(10);
         $locations = Location::all(['name', 'id']);
+        $users = User::query()->where('role', 'pengelola')->get(['name', 'id']);
         
-        return view('admin.travel_packages.edit', compact('travel_package','galleries', 'locations'));
+        return view('admin.travel_packages.edit', compact('travel_package','galleries', 'locations', 'users'));
     }
 
     /**

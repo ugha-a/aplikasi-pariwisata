@@ -50,7 +50,7 @@
             <input type="text" name="phone" id="phone"
                    class="form-control @error('phone') is-invalid @enderror"
                    placeholder="Masukkan nomor hp"
-                   value="{{ old('phone') }}" required>
+                   value="{{ old('phone', $user->phone) }}" required>
             @error('phone')
                 <small class="text-danger">{{ $message }}</small>
             @enderror

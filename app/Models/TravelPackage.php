@@ -20,4 +20,14 @@ class TravelPackage extends Model
     {
         return $this->hasOne(Gallery::class);
     }
+
+    public function locations()
+    {
+        return $this->belongsTo(Location::class, 'location', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

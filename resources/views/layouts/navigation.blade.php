@@ -27,7 +27,7 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            @if (in_array(auth()->user()->role, ['admin', 'dinas']))
+            @if (in_array(auth()->user()->role, ['admin', 'dinas', 'pengelola']))
     <li class="nav-item">
         <a href="{{ route('admin.dashboard') }}"
            class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -47,7 +47,7 @@
     </li>
 @endif
 
-@if (in_array(auth()->user()->role, ['admin', 'dinas']))
+@if (in_array(auth()->user()->role, ['admin', 'dinas', 'pengelola']))
     <li class="nav-item">
         <a href="{{ route('admin.bookings.index') }}"
            class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
@@ -57,7 +57,7 @@
     </li>
 @endif
 
-@if (in_array(auth()->user()->role, ['admin']))
+@if (in_array(auth()->user()->role, ['admin', 'pengelola']))
     <li class="nav-item">
         <a href="{{ route('admin.travel_packages.index') }}"
            class="nav-link {{ request()->routeIs('admin.travel_packages.*') ? 'active' : '' }}">
@@ -77,7 +77,7 @@
     </li>
 @endif
 
-@if (in_array(auth()->user()->role, ['admin', 'dinas']))
+@if (in_array(auth()->user()->role, ['admin', 'dinas', 'pengelola']))
     <li class="nav-item has-treeview {{ request()->routeIs('report.*') ? 'menu-open' : '' }}">
         <a href="#" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-bar fa-lg"></i>
@@ -105,11 +105,11 @@
     </li>
 @endif
 
-            
-    
+
+
         </ul>
     </nav>
-    
+
     <!-- /.sidebar-menu -->
 </div>
 <!-- /.sidebar -->

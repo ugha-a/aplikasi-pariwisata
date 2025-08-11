@@ -173,18 +173,18 @@
 
             {{-- PENGELOLA (samakan struktur dengan create) --}}
             <div class="form-group col-md-6">
-              <label class="lbl" for="Manager">Pengelola <span class="req">*</span></label>
-              <div class="input-group input-neo @error('manager') has-error @enderror">
+              <label class="lbl" for="user_id">Pengelola <span class="req">*</span></label>
+              <div class="input-group input-neo @error('user_id') has-error @enderror">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
                 </div>
                 {{-- NOTE: ganti $managers & name="manager" sesuai sumber data kamu.
                      Diset agar tidak bentrok dengan "location" seperti di form create awal. --}}
-                <select name="manager" id="Manager" class="form-control" required>
+                <select name="user_id" id="user_id" class="form-control" required>
                   <option value="">-- Pilih User --</option>
-                  @foreach(($managers ?? []) as $mgr)
+                  @foreach(($users ?? []) as $mgr)
                     <option value="{{ $mgr->id }}"
-                      {{ (string)old('manager', $travel_package->manager_id ?? '') === (string)$mgr->id ? 'selected' : '' }}>
+                      {{ (string)old('user_id', $travel_package->user_id ?? '') === (string)$mgr->id ? 'selected' : '' }}>
                       {{ $mgr->name }}
                     </option>
                   @endforeach
@@ -197,7 +197,7 @@
             <div class="form-group col-12">
               <div class="d-flex justify-content-between align-items-center">
                 <label class="lbl" for="description">Deskripsi <span class="req">*</span></label>
-                <small id="descCount" class="text-muted">0/500</small>
+                {{-- <small id="descCount" class="text-muted">0/500</small> --}}
               </div>
               <textarea class="form-control @error('description') is-invalid @enderror"
                         id="description" name="description" rows="6"
@@ -209,7 +209,7 @@
             <div class="form-group col-12">
               <div class="d-flex justify-content-between align-items-center">
                 <label class="lbl" for="facility">Fasilitas</label>
-                <small id="facilityCount" class="text-muted">0/500</small>
+                {{-- <small id="facilityCount" class="text-muted">0/500</small> --}}
               </div>
               <textarea class="form-control @error('facility') is-invalid @enderror"
                         id="facility" name="facility" rows="6"
@@ -285,82 +285,39 @@
   {{-- CKEditor (samakan versi dgn create) --}}
   <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
   <script>
-    // --- CKEditor init + live counter (match create)
+    // --- CKEditor init (Deskripsi & Fasilitas)
     const editors = {};
-    function initEditor(selector, onChangeCb){
-      return ClassicEditor.create(document.querySelector(selector),{
+    function initEditor(selector){
+      return ClassicEditor.create(document.querySelector(selector), {
         toolbar: ['heading','bold','italic','bulletedList','numberedList','link','blockQuote','undo','redo']
-      }).then(ed=>{
-        editors[selector]=ed;
-        ed.model.document.on('change:data', ()=> onChangeCb(ed.getData()));
+      }).then(ed => {
+        editors[selector] = ed;
       }).catch(console.error);
     }
-
-    const limit = 500;
-    const countText = html => (new DOMParser).parseFromString(html,'text/html').body.textContent || '';
-    const setCounter = (elId, html) => {
-      const text = countText(html).trim();
-      const n = text.length;
-      const el = document.getElementById(elId);
-      el.textContent = `${n}/${limit}`;
-      el.style.color = n>limit ? '#ff4d4d' : '#6c757d';
-    };
-
-    // Init editors + counters
-    initEditor('#description', html=> setCounter('descCount', html)).then(()=>{
-      setCounter('descCount', editors['#description']?.getData()||'');
-    });
-    initEditor('#facility', html=> setCounter('facilityCount', html)).then(()=>{
-      setCounter('facilityCount', editors['#facility']?.getData()||'');
-    });
-
+  
+    // Init editors (tanpa counter)
+    initEditor('#description');
+    initEditor('#facility');
+  
     // --- Rupiah formatter (harga)
     const price = document.getElementById('price');
-    const toRupiah = (v)=>{
-      v = (v+'').replace(/[^\d]/g,'');
-      if(!v) return '';
-      return v.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    const toRupiah = (v) => {
+      v = (v + '').replace(/[^\d]/g, '');
+      if (!v) return '';
+      return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
-    const fromRupiah = v => (v+'').replace(/\./g,'');
-
-    if(price){
-      // format initial value (if controller belum format)
+    const fromRupiah = v => (v + '').replace(/\./g, '');
+  
+    price.addEventListener('input', () => {
       price.value = toRupiah(price.value);
-      price.addEventListener('input', ()=>{
-        price.value = toRupiah(price.value);
-        price.selectionStart = price.selectionEnd = price.value.length;
-      });
-    }
-
-    // --- Client-side checks before submit
-    document.getElementById('tpForm').addEventListener('submit', (e)=>{
-      const descTxt = countText(editors['#description']?.getData()||'');
-      if(descTxt.length > limit){
-        e.preventDefault();
-        alert('Deskripsi melebihi 500 karakter.');
-        return;
-      }
-      // convert price to raw number
-      if(price) price.value = fromRupiah(price.value);
+      price.selectionStart = price.selectionEnd = price.value.length;
     });
-
-    // Preview file gambar + update label
-    const inputFile = document.getElementById('images');
-    const labelFile = document.querySelector('label.custom-file-label');
-    const preview   = document.getElementById('imgPreview');
-
-    if(inputFile){
-      inputFile.addEventListener('change', (e)=>{
-        const f = e.target.files?.[0];
-        if(!f) return;
-        if(labelFile) labelFile.textContent = f.name;
-        const reader = new FileReader();
-        reader.onload = ev => {
-          preview.src = ev.target.result;
-          preview.classList.remove('d-none');
-        };
-        reader.readAsDataURL(f);
-      });
-    }
+  
+    // --- Client-side submit
+    document.getElementById('tpForm').addEventListener('submit', (e) => {
+      // konversi harga ke angka murni sebelum kirim
+      price.value = fromRupiah(price.value);
+    });
   </script>
+  
 @endsection

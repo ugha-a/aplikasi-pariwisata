@@ -97,7 +97,7 @@
                       </div>
                       <select name="location" id="Location" class="form-control" required>
                           <option value="">-- Pilih User --</option>
-                          @foreach($locations as $loc)
+                          @foreach($users as $loc)
                               <option value="{{ $loc->id }}" {{ old('location') == $loc->id ? 'selected' : '' }}>
                                   {{ $loc->name }}
                               </option>
@@ -110,23 +110,17 @@
               </div>
               </div>
 
-              {{-- DESKRIPSI --}}
+             {{-- DESKRIPSI --}}
               <div class="form-group">
-                <div class="d-flex justify-content-between align-items-center">
-                  <label class="lbl" for="description">Deskripsi <span class="req">*</span></label>
-                  <small id="descCount" class="text-muted">0/500</small>
-                </div>
+                <label class="lbl" for="description">Deskripsi <span class="req">*</span></label>
                 <textarea class="form-control" id="description" name="description" rows="6"
-                          placeholder="Tulis gambaran singkat paket wisata (maks 500 karakter)" required>{{ old('description') }}</textarea>
+                          placeholder="Tulis gambaran singkat paket wisata" required>{{ old('description') }}</textarea>
                 @error('description') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
               </div>
 
               {{-- FASILITAS --}}
               <div class="form-group">
-                <div class="d-flex justify-content-between align-items-center">
-                  <label class="lbl" for="facility">Fasilitas</label>
-                  <small id="facilityCount" class="text-muted">0/500</small>
-                </div>
+                <label class="lbl" for="facility">Fasilitas</label>
                 <textarea class="form-control" id="facility" name="facility" rows="6"
                           placeholder="Contoh: Transportasi, Makan siang, Guide, Tiket masuk, dll.">{{ old('facility') }}</textarea>
                 @error('facility') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
@@ -190,62 +184,37 @@
 <script>
   // --- CKEditor init (Deskripsi & Fasilitas)
   const editors = {};
-  function initEditor(selector, onChangeCb){
-    return ClassicEditor.create(document.querySelector(selector),{
+  function initEditor(selector){
+    return ClassicEditor.create(document.querySelector(selector), {
       toolbar: ['heading','bold','italic','bulletedList','numberedList','link','blockQuote','undo','redo']
-    }).then(ed=>{
-      editors[selector]=ed;
-      ed.model.document.on('change:data', ()=> onChangeCb(ed.getData()));
+    }).then(ed => {
+      editors[selector] = ed;
     }).catch(console.error);
   }
 
-  // --- Live counter (strip HTML to count)
-  const limit = 500;
-  const countText = html => (new DOMParser).parseFromString(html,'text/html').body.textContent || '';
-  const setCounter = (elId, html) => {
-    const text = countText(html).trim();
-    const n = text.length;
-    const el = document.getElementById(elId);
-    el.textContent = `${n}/${limit}`;
-    el.style.color = n>limit ? '#ff4d4d' : '#6c757d';
-  };
-
-  // Init editors + counters
-  initEditor('#description', html=> setCounter('descCount', html)).then(()=>{
-    setCounter('descCount', editors['#description']?.getData()||'');
-  });
-  initEditor('#facility', html=> setCounter('facilityCount', html)).then(()=>{
-    setCounter('facilityCount', editors['#facility']?.getData()||'');
-  });
+  // Init editors (tanpa counter)
+  initEditor('#description');
+  initEditor('#facility');
 
   // --- Rupiah formatter (harga)
   const price = document.getElementById('price');
-  const toRupiah = (v)=>{
-    v = (v+'').replace(/[^\d]/g,'');
-    if(!v) return '';
-    return v.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  const toRupiah = (v) => {
+    v = (v + '').replace(/[^\d]/g, '');
+    if (!v) return '';
+    return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
-  const fromRupiah = v => (v+'').replace(/\./g,''); // if you need raw number later
+  const fromRupiah = v => (v + '').replace(/\./g, '');
 
-  price.addEventListener('input', ()=>{
-    const caret = price.selectionStart;
+  price.addEventListener('input', () => {
     price.value = toRupiah(price.value);
-    // keep caret at end to avoid jumping – simplest approach
     price.selectionStart = price.selectionEnd = price.value.length;
   });
 
-  // --- Client-side tiny checks before submit
-  document.getElementById('tpForm').addEventListener('submit', (e)=>{
-    // enforce description limit
-    const descTxt = countText(editors['#description']?.getData()||'');
-    if(descTxt.length > limit){
-      e.preventDefault();
-      alert('Deskripsi melebihi 500 karakter.');
-      return;
-    }
-    // convert price to raw number (optional)
-    // you can also handle in controller by stripping dots.
+  // --- Client-side submit
+  document.getElementById('tpForm').addEventListener('submit', (e) => {
+    // konversi harga ke angka murni sebelum kirim
     price.value = fromRupiah(price.value);
   });
 </script>
+
 @endsection

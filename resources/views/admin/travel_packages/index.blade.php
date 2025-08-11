@@ -43,6 +43,7 @@
                   <th style="width: 56px">No</th>
                   <th>Tipe</th>
                   <th>Lokasi</th>
+                  <th>Pengelola</th>
                   <th>Harga</th>
                   <th style="width: 120px">Aksi</th>
                 </tr>
@@ -52,7 +53,8 @@
                   <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $travel_package->type }}</td>
-                    <td>{{ $travel_package->location }}</td>
+                    <td>{{ $travel_package->locations?->name ?? '-' }}</td>
+                    <td>{{ $travel_package->users?->name ?? '-' }}</td>
                     <td data-price="{{ $travel_package->price }}">{{ $travel_package->price }}</td>
                     <td>
                       <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
@@ -145,7 +147,7 @@
         <div style="position: relative; max-width: 320px;">
             <i class="fas fa-search position-absolute" style="left:.65rem; top:50%; transform:translateY(-50%); opacity:.6;"></i>
             <input id="globalSearch" type="search" class="form-control"
-                placeholder="Cari tipe/lokasi/harga…"
+                placeholder="Cari tipe/lokasi/pengelola/harga…"
                 style="padding-left:2.2rem; border-radius:.6rem; border:1px solid #e7ecf5; background:#f8faff;">
         </div>
         `);

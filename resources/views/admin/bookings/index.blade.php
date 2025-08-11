@@ -140,7 +140,7 @@
                           <span>oleh: {{ $booking->processedBy->name ?? 'Admin' }}</span>
                         </div>
                       </td>
-                      <td>{{ $booking->travel_package->location }}</td>
+                      <td>{{ $booking->travel_package->name }}</td>
                       <td class="actions">
                         <form onclick="return confirm('Yakin hapus data ini?');" class="d-inline-block"
                               action="{{ route('admin.bookings.destroy', [$booking]) }}" method="post">
