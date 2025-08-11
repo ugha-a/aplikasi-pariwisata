@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="section" id="popular">
-  <div class="container">
+  <div class="container" style="margin-bottom: 25px">
     <h2 class="section__title" style="text-align:center">Detail Wisata</h2>
 
     {{-- FILTER & SEARCH BAR (server-side GET + auto submit) --}}
@@ -15,11 +15,13 @@
                  value="{{ request('search') }}" />
         </div>
 
+        @php $selectedLokasi = request('lokasi'); @endphp
         <select id="filterLokasi" name="lokasi" class="popular__filter-select">
-          <option value="">Semua Lokasi</option>
+          <option value="" {{ $selectedLokasi === null || $selectedLokasi === '' ? 'selected' : '' }}>
+            Semua Lokasi
+          </option>
           @foreach ($locations as $loc)
-            @php $val = strtolower($loc->name); @endphp
-            <option value="{{ $val }}" {{ request('lokasi') === $val ? 'selected' : '' }}>
+            <option value="{{ $loc->id }}" {{ (string)$selectedLokasi === (string)$loc->id ? 'selected' : '' }}>
               {{ $loc->name }}
             </option>
           @endforeach
@@ -55,7 +57,7 @@
             </div>
 
             <div class="card-body">
-              <h3 class="card-title">{{ $tp->location }}</h3>
+              <h3 class="card-title">{{ $tp->name ?? '-' }}</h3>
               <p class="card-sub">{{ $tp->type }}</p>
               <div class="card-meta">
                 <div></div>

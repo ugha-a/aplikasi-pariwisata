@@ -55,7 +55,7 @@
       <div class="grid-2">
         <!-- Kiri: Deskripsi -->
         <article class="card info-card">
-          <h3 class="card-title mb-2">Informasi Wisata: {{ $travel_package->location }}</h3>
+          <h3 class="card-title mb-2">Informasi Wisata: {{ $travel_package->name }}</h3>
           <div class="muted mb-3">Kategori: <b>{{ $travel_package->type }}</b></div>
 
           <div class="richtext">
@@ -179,9 +179,8 @@
               @endif
               <div class="popular__data">
                 <h2 class="popular__price">
-                  <span>Rp</span>{{ convertToIDR($tp->pric, false) }}
+                  {{ $tp->name ?? '-' }}
                 </h2>
-                <h3 class="popular__title">{{ $tp->location }}</h3>
                 <p class="popular__description">{{ $tp->type }}</p>
               </div>
             </a>

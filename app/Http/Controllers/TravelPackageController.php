@@ -11,13 +11,20 @@ class TravelPackageController extends Controller
     public function index()
     {
         $travel_packages = TravelPackage::query()
-                ->when(request('search'), fn($q,$s)=>$q->where(function($qq) use ($s){
-                    $qq->where('location','like',"%$s%")
-                        ->orWhere('type','like',"%$s%");
-                }))
-                ->when(request('lokasi'), fn($q,$l)=>$q->whereRaw('LOWER(location) = ?', [$l]))
-                ->with('galleries')
-                ->paginate(6);
+            ->when(request('search'), function ($q, $s) {
+                $q->where(function ($qq) use ($s) {
+                    $qq->whereHas('locations', function ($lq) use ($s) {
+                        $lq->where('name', 'like', "%$s%");
+                    })
+                    ->orWhere('name', 'like', "%$s%");
+                });
+            })
+            // Filter lokasi (ID)
+            ->when(request('lokasi'), function ($q, $l) {
+                $q->where('location', $l);
+            })
+            ->with(['galleries', 'locations'])
+            ->paginate(6);
         $locations = Location::all(['name', 'id']);
 
         return view('travel_packages.index', compact('travel_packages', 'locations'));

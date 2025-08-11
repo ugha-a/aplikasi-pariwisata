@@ -3,12 +3,12 @@
 @section('styles')
 <style>
   :root{
-    --brand:#2f3b7c;      /* indigo laut */
-    --terracotta:#c0643b; /* tanah liat */
-    --forest:#2e7d4a;     /* hijau hutan */
-    --gold:#d4a017;       /* emas */
-    --ink:#1f2940;        /* teks utama */
-    --soft:#f6f7fb;       /* latar lembut */
+    --brand:#2f3b7c;
+    --terracotta:#c0643b;
+    --forest:#2e7d4a;
+    --gold:#d4a017;
+    --ink:#1f2940;
+    --soft:#f6f7fb;
   }
 
   /* ======= Page Head (hero) ======= */
@@ -19,11 +19,11 @@
     border:1px solid #eef1f6;
     box-shadow:0 14px 32px rgba(31,41,64,.06);
   }
-  .hero-inner{ padding:22px 22px; }
+  .hero-inner{ padding:22px; }
   .hero h1{ color:var(--ink); font-weight:800; letter-spacing:.2px; margin:0; }
-  .hero small{ color:#6b738a; }
+  .hero small{ color:#6b738a; display:block; margin-top:4px; }
 
-  /* Ornamen motif “parang” halus */
+  /* Ornamen motif */
   .hero::after{
     content:""; position:absolute; inset:0; pointer-events:none; opacity:.25;
     background-image:
@@ -35,7 +35,7 @@
     mix-blend-mode: multiply;
   }
 
-  /* ======= Cards ======= */
+  /* ======= Cards & KPI ======= */
   .card-neo{
     border:1px solid #eef1f6; border-radius:16px; background:#fff;
     box-shadow:0 10px 26px rgba(31,41,64,.05);
@@ -45,9 +45,16 @@
     padding:18px; border-radius:14px; background:linear-gradient(180deg,#ffffff, #fbfcff);
     border:1px solid #eef1f6;
   }
+
+  .kpi-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem; /* jarak antar kartu */
+}
+
   .kpi .ico{
     width:42px; height:42px; border-radius:12px; display:grid; place-items:center;
-    box-shadow:0 8px 18px rgba(0,0,0,.06);
+    box-shadow:0 8px 18px rgba(0,0,0,.06); flex-shrink:0;
   }
   .ico-blue{background:rgba(47,59,124,.1); color:var(--brand);}
   .ico-green{background:rgba(46,125,74,.1); color:var(--forest);}
@@ -55,16 +62,53 @@
   .kpi .label{ color:#6b738a; font-size:.86rem; }
   .kpi .value{ color:var(--ink); font-weight:800; font-size:1.25rem; letter-spacing:.2px; }
 
-  /* ======= Table/Chart wrappers (consisten) ======= */
+  /* ======= Section Titles ======= */
   .section-title{
     font-weight:800; color:var(--ink); margin-bottom:.4rem;
   }
   .section-sub{ color:#6b738a; font-size:.92rem; }
 
   /* Responsive tweaks */
+  @media (max-width: 992px){
+    .hero-inner{
+      flex-direction:column !important;
+      gap:10px;
+    }
+    .hero small{
+      font-size:.85rem;
+    }
+  }
+  @media (max-width: 768px){
+    .kpi{
+      padding:14px;
+      flex-direction: row;
+    }
+    .kpi .value{
+      font-size:1.15rem;
+    }
+    #chart2{
+      min-height: 320px !important;
+    }
+  }
   @media (max-width: 576px){
-    .hero-inner{ padding:18px; }
-    .kpi{ padding:14px; }
+    .hero-inner{
+      padding:16px;
+    }
+    .kpi{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:6px;
+    }
+    .kpi .ico{
+      width:38px;
+      height:38px;
+    }
+    .kpi .value{
+      font-size:1.05rem;
+    }
+    #chart2{
+      min-height: 260px !important;
+    }
   }
 </style>
 @endsection
@@ -109,34 +153,40 @@
         </div>
 
         <!-- KPI row -->
-        <div class="col-lg-4 col-md-6 mb-3">
+        @php
+          $isAdminOrDinas = in_array(auth()->user()->role, ['admin', 'dinas']);
+        @endphp
+
+        <div class="col-12 mb-3">
+          <div class="kpi-grid">
+            {{-- Kartu yang selalu tampil --}}
             <div class="kpi">
-            <div class="ico ico-blue"><i class="fas fa-suitcase-rolling"></i></div>
-            <div>
+              <div class="ico ico-blue"><i class="fas fa-suitcase-rolling"></i></div>
+              <div>
                 <div class="label">Total Paket</div>
-                <div class="value">{{ $totalPackages ?? '-' }}</div>
+                <div class="value">{{ $travel_package ?? '-' }}</div>
+              </div>
             </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-4 col-md-6 mb-3">
+
             <div class="kpi">
-            <div class="ico ico-green"><i class="fas fa-shopping-bag"></i></div>
-            <div>
+              <div class="ico ico-green"><i class="fas fa-shopping-bag"></i></div>
+              <div>
                 <div class="label">Total Booking</div>
-                <div class="value">{{ $totalBookings ?? '-' }}</div>
+                <div class="value">{{ $booking ?? '-' }}</div>
+              </div>
             </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="kpi">
-            <div class="ico ico-gold"><i class="fas fa-user-tie"></i></div>
-            <div>
-                <div class="label">Total Pengelola</div>
-                <div class="value">{{ $totalManagers ?? '-' }}</div>
-            </div>
-            </div>
+
+            {{-- Kartu khusus Admin/Dinas --}}
+            @if ($isAdminOrDinas)
+              <div class="kpi">
+                <div class="ico ico-gold"><i class="fas fa-user-tie"></i></div>
+                <div>
+                  <div class="label">Total Pengelola</div>
+                  <div class="value">{{ $totalPengelola ?? '-' }}</div>
+                </div>
+              </div>
+            @endif
+          </div>
         </div>
   
 
@@ -163,11 +213,11 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const wisata = @json($wisata);
+    // 🔽 gunakan data dari $topBooking
+    const topBooking = @json($topBooking);
 
-    // label & data aman
-    const wisataLabels = (wisata || []).map(item => item?.travel_package?.name ?? 'Tidak diketahui');
-    const wisataData   = (wisata || []).map(item => Number(item?.total ?? 0));
+    const wisataLabels = (topBooking || []).map(item => item?.nama_paket ?? 'Tidak diketahui');
+    const wisataData   = (topBooking || []).map(item => Number(item?.total ?? 0));
 
     const options2 = {
       chart: {
@@ -182,51 +232,31 @@
       }],
       xaxis: {
         categories: wisataLabels,
-        labels: {
-          rotate: -20,
-          trim: true
-        },
+        labels: { rotate: -20, trim: true },
         axisBorder: { show:false },
         tickPlacement: 'on'
       },
-      yaxis: {
-        labels: { formatter: val => Math.round(val) }
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 8,
-          columnWidth: '48%',
-          dataLabels: { position: 'top' }
-        }
-      },
+      yaxis: { labels: { formatter: val => Math.round(val) } },
+      plotOptions: { bar: { borderRadius: 8, columnWidth: '48%', dataLabels: { position: 'top' } } },
       dataLabels: {
         enabled: true,
         offsetY: -18,
         style: { fontSize: '11px', fontWeight: '700', colors: ['#4b5370'] },
         formatter: val => (val || 0)
       },
-      tooltip: {
-        theme: 'light',
-        y: { formatter: val => `${val} pesanan` }
-      },
-      grid: {
-        borderColor: '#eef1f6',
-        strokeDashArray: 4,
-      },
+      tooltip: { theme: 'light', y: { formatter: val => `${val} pesanan` } },
+      grid: { borderColor: '#eef1f6', strokeDashArray: 4 },
       colors: ['#2f3b7c', '#c0643b', '#2e7d4a', '#d4a017'],
       fill: { opacity: .95 },
       states: {
         hover: { filter: { type: 'lighten', value: 0.05 } },
         active:{ filter: { type: 'darken',  value: 0.05 } }
       },
-      title: {
-        text: '',
-      },
       legend: { show: false }
     };
 
-    const chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
-    chart2.render();
+    new ApexCharts(document.querySelector("#chart2"), options2).render();
   });
 </script>
 @endsection
+

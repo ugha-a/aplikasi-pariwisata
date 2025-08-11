@@ -60,7 +60,7 @@ class LaporanPemesanan implements FromView
             $total = (clone $baseQuery)->count();
     
             return [
-                'nama_paket' => $travelPackage->type ?? 'Tidak diketahui',
+                'nama_paket' => $travelPackage->name ?? 'Tidak diketahui',
                 'hari_ini'   => $hariIni,
                 'minggu'     => $minggu,
                 'bulan'      => $bulan,

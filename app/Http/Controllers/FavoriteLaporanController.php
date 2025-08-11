@@ -35,7 +35,7 @@ class FavoriteLaporanController extends Controller
             ->get()
             ->map(function ($item) {
                 return [
-                    'nama_paket' => $item->travel_package->type ?? 'Tidak diketahui',
+                    'nama_paket' => $item->travel_package->name ?? 'Tidak diketahui',
                     'total'      => $item->total
                 ];
             });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Booking;
 use App\Models\Location;
 use Illuminate\Http\Request;
@@ -12,18 +13,49 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $travel_package = TravelPackage::query()
+            ->when(auth()->user()->role === 'pengelola', function ($q) {
+                $q->where('user_id', auth()->id()); // sesuaikan nama kolom pengelola
+            })
+            ->count();
 
-        $namaWisata = Booking::with('travel_package')->get();
-        $grouped = $namaWisata->groupBy('travel_package_id')->map(function ($items) {
-            return [
-                'travel_package' => $items->first()->travel_package,
-                'jumlah' => $items->count(),
-            ];
-        })->sortByDesc('jumlah')->take(10);
+        $booking = Booking::query()
+            ->when(auth()->user()->role === 'pengelola', function ($q) {
+                $q->whereHas('travel_package', function ($sub) {
+                    $sub->where('user_id', auth()->id()); // sesuaikan kolom pengelola
+                });
+            })
+            ->count();
+        $topBookingQuery = Booking::with('travel_package')
+            ->selectRaw('travel_package_id, COUNT(*) as total');
+
+        // Jika user login adalah pengelola
+        if (auth()->user()->role === 'pengelola') {
+            $topBookingQuery->whereHas('travel_package', function ($q) {
+                $q->where('user_id', auth()->id()); // sesuaikan nama kolom pengelola
+            });
+        }
+
+        $topBooking = $topBookingQuery
+            ->groupBy('travel_package_id')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'nama_paket' => $item->travel_package->name ?? 'Tidak diketahui',
+                    'total'      => $item->total
+                ];
+            });
+
+        $totalPengelola = User::where('role', 'pengelola')->count();
 
         return view('admin.dashboard', [
             // 'kunjungan' => Location::count(),
-            'wisata' => $grouped,
+            'travel_package' => $travel_package,
+            'booking' => $booking,
+            'topBooking' => $topBooking,
+            'totalPengelola' => $totalPengelola,
         ]);
     }
 }
