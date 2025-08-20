@@ -20,7 +20,7 @@
 
   <style>
     :root{
-        --logo-size: 75px;            /* desktop */
+        --logo-size: 95px;            /* desktop */
         --logo-gap: 10px;
         --brand-weight: 800;
         --brand-size: 1.5rem;        /* ~18px */
