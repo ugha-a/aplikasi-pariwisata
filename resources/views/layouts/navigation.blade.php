@@ -21,6 +21,68 @@
             background: none !important;   /* Background tetap transparan */
             text-decoration: underline;    /* Opsional: underline saat hover */
         }
+
+        /* === Sidebar hover fix: no overlap, clean, soft === */
+
+        /* beri jarak vertikal & radius pada setiap link */
+        .nav-sidebar .nav-link{
+        position: relative;
+        border-radius: 10px;
+        margin: 4px 8px;               /* JARAK antar item -> hilangkan efek menimpa */
+        padding-block: 10px;
+        transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .08s ease;
+        box-shadow: none !important;   /* netralkan shadow bawaan */
+        z-index: 0;
+        }
+
+        /* item container punya stacking context sendiri */
+        .nav-sidebar .nav-item{
+        isolation: isolate;            /* shadow tidak “masuk” ke sibling */
+        }
+
+        /* hover: latar lembut + shadow pendek */
+        .nav-sidebar .nav-link:hover{
+        background: #eef3ff !important;                 /* biru lembut */
+        color: #22346c !important;
+        box-shadow: 0 4px 10px rgba(51,102,255,.08);    /* shadow halus */
+        }
+
+        /* active: outline inset + indikator kiri, tanpa shadow besar */
+        .nav-sidebar .nav-link.active{
+        background: #e7efff !important;
+        color: #1f3a8a !important;
+        box-shadow: inset 0 0 0 1px rgba(51,102,255,.22) !important;
+        }
+
+        .nav-sidebar .nav-link.active::before{
+        content:"";
+        position:absolute;
+        left:-6px; top:8px; bottom:8px; width:4px; border-radius:3px;
+        background: linear-gradient(180deg,#FF6600,#3366FF);
+        }
+
+        /* klik sedikit “mengempis” agar terasa responsif */
+        .nav-sidebar .nav-link:active{ transform: translateY(1px); }
+
+        /* submenu (treeview) — tetap rapi & tidak menimpa */
+        .nav-sidebar .nav-treeview .nav-link{
+        margin: 2px 14px;              /* extra gap untuk child */
+        border-radius: 8px;
+        box-shadow: none !important;
+        }
+        .nav-sidebar .nav-treeview .nav-link:hover{
+        background:#f3f6ff !important;
+        box-shadow: 0 2px 6px rgba(51,102,255,.07);
+        }
+
+        /* kalau mau jarak sedikit lebih lebar antar root item, aktifkan ini: */
+        .nav-sidebar > .nav-item + .nav-item { margin-top: 2px; }
+       
+
+        /* hormati prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce){
+        .nav-sidebar .nav-link{ transition: none !important; }
+        }
     </style>
 
 
