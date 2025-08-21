@@ -1,6 +1,7 @@
 @extends('layouts.frontend')
 
 @push('style-alt')
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
   <!-- Libs -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
@@ -233,6 +234,121 @@
     .card.small { height: auto !important; }
     .popular-swiper .swiper-slide { align-items: flex-start; }
 
+    .story {
+    padding-top: 48px;          /* agak rapat dari hero */
+    padding-bottom: 40px;       /* rapat ke section berikutnya */
+    /* position: relative; */
+  }
+
+  .story-wrap{
+    position: relative;
+    border-radius: var(--radius-xl);
+    padding: clamp(18px, 3.5vw, 28px) clamp(18px, 4vw, 32px);
+    background:
+      radial-gradient(1200px 500px at 100% 0%, rgba(51,102,255,.10), transparent 60%),
+      radial-gradient(900px 400px at 0% 100%, rgba(255,102,0,.10), transparent 55%),
+      linear-gradient(180deg,#ffffff, #fbfdff);
+    border: 1px solid #eef2ff;
+    box-shadow: 0 18px 40px rgba(51,102,255,.08);
+    overflow: hidden;
+    isolation: isolate;
+    text-align: center;
+  }
+
+  /* ornamen tipis batik di background */
+  .story-wrap::after{
+    opacity: .65;      
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(45deg, rgba(51,102,255,.05) 0 12px, transparent 12px 24px),
+      repeating-linear-gradient(-45deg, rgba(255,102,0,.05) 0 12px, transparent 12px 24px);
+    mask-image: radial-gradient(70% 60% at 50% 50%, #000 60%, transparent 100%);
+    pointer-events:none;
+    z-index: -1;
+  }
+
+  /* badge kecil di atas judul */
+  .story-badge{
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.48rem .85rem; border-radius:999px;
+    background:#f6f9ff; border:1px solid #e7efff;
+    color:var(--primary); font-weight:800; letter-spacing:.2px;
+    margin-bottom:.7rem;
+  }
+
+
+  .story-title{
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 1000;
+    color: var(--ink-weak);
+    letter-spacing:.2px;
+    margin: 0 0 .9rem;
+  }
+
+  .story .story-title,
+  .story .dropcap {
+    font-family: "Playfair Display", serif !important; /* heading & huruf awal */
+    font-weight: 800;
+  }
+
+  .story .story-lead,
+  .story .story-body,
+  .story .story-badge,
+  .story .story-cta .button {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-weight: 600; /* 400/600/700/800 tersedia dari link yang kamu pasang */
+  }
+
+  .story .story-lead, .story .story-body { line-height: 1.75; }
+  .story .story-title { letter-spacing: .2px; }
+
+
+  /* dua kolom di desktop */
+  .story-grid{
+    display: grid;
+    grid-template-columns: 1fr !important; /* paksa 1 kolom */
+    gap: clamp(12px, 2vw, 18px);
+    max-width: 980px;                      /* lebar nyaman baca */
+    margin: 0 auto;                        /* center */
+  }
+  @media (min-width: 900px){
+    .story-grid{
+      grid-template-columns: 1.2fr 1fr;
+      align-items:start;
+    }
+  }
+
+  .story-lead{ margin-bottom: .35rem; }
+  .story-body{ margin-top: .35rem; }
+
+  /* paragraf */
+  .story-lead, .story-body{
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.75;
+    font-size: clamp(.98rem, 1.15vw, 1.08rem);
+  }
+
+  /* dropcap manis */
+  .dropcap{
+    display:inline-block;                  /* bukan float */
+    font-weight:1000;
+    font-size: clamp(2rem, 4.6vw, 2.8rem);
+    line-height: .9;
+    margin: .05rem .35rem 0 0;
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow: 0 10px 20px rgba(51,102,255,.18);
+  }
+
+
+  /* CTA di bawah paragraf */
+  .story-cta{ display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap; margin-top: 14px; }
+
+  /* garis aksen tipis di bawah block */
+  .story .u-line{ margin-top: 12px; }
+
     /* Footer langsung setelah popular */
     footer {
       margin-top: 0 !important;
@@ -297,34 +413,34 @@
     </div>
   </section>
 
-  {{-- ==================== FEATURE STRIP ==================== --}}
-  <section class="section">
+  {{-- ==================== SULTRA STORY (eye-candy) ==================== --}}
+  <section class="section story u-ornament" id="about-sultra">
     <div class="container">
-      <div class="section__eyebrow"><i class="bx bxs-diamond"></i> Keunggulan Kami</div>
-      <h2 class="section__title">Layanan Andal untuk Perjalanan Berkesan</h2>
-      <div class="u-line" style="margin-bottom:18px;"></div>
-
-      <div class="features">
-        <div class="feature" data-aos="fade-up" data-aos-delay="0">
-          <i class="bx bxs-shield"></i>
-          <div>
-            <h4>Aman & Terjamin</h4>
-            <p>Partner resmi, pemandu lokal berpengalaman, dan dukungan 24/7.</p>
-          </div>
+      <div class="story-wrap" data-aos="fade-up">
+        <div class="story-badge"><i class="bx bxs-sun"></i> Cerita Nusantara</div>
+        <h2 class="story-title">
+          Sulawesi Tenggara • Alam Biru & Budaya Hangat
+        </h2>
+  
+        <div class="story-grid">
+          <p class="story-lead">
+            <span class="dropcap">S</span>ulawesi Tenggara adalah surga tersembunyi di timur Indonesia
+            yang menyimpan pesona alam luar biasa dan budaya yang memikat hati. Dari birunya laut di
+            Kepulauan Wakatobi hingga keindahan alam pegunungan dan air terjun yang memukau di daratan
+            utama, setiap sudut wilayah ini menawarkan pengalaman tak terlupakan.
+          </p>
+  
+          <p class="story-body">
+            Mari jelajahi lebih jauh keajaiban yang tersimpan di bumi Anoa ini. Rasakan hembusan
+            angin laut yang menyapa lembut di pantai-pantai terpencil, nikmati hangatnya mentari
+            pagi dari atas perahu tradisional yang melintasi gugusan pulau, dan temukan kehidupan
+            bawah laut yang seolah tak tersentuh waktu.
+          </p>
         </div>
-        <div class="feature" data-aos="fade-up" data-aos-delay="80">
-          <i class="bx bxs-happy-beaming"></i>
-          <div>
-            <h4>Pengalaman Berkesan</h4>
-            <p>Kurasi aktivitas yang autentik—ramah keluarga hingga petualangan.</p>
-          </div>
-        </div>
-        <div class="feature" data-aos="fade-up" data-aos-delay="160">
-          <i class="bx bxs-purchase-tag-alt"></i>
-          <div>
-            <h4>Harga Transparan</h4>
-            <p>Tanpa biaya tersembunyi. Pilih paket sesuai anggaranmu.</p>
-          </div>
+  
+        <div class="story-cta">
+          <a href="#popular" class="button primary"><i class="bx bx-compass"></i> Lihat Rekomendasi</a>
+          {{-- <a href="{{ route('travel_package.index') }}" class="button ghost"><i class="bx bx-map"></i> Semua Destinasi</a> --}}
         </div>
       </div>
     </div>
