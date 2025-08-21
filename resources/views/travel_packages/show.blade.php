@@ -113,7 +113,10 @@
             <button id="closePanel" class="icon-btn" aria-label="Tutup"><i class='bx bx-x'></i></button>
           </div>
 
-          <form id="bookingForm" action="{{ route('booking.store') }}" method="POST" class="grid-form">
+          <form id="bookingForm" action="{{ route('booking.store') }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="grid-form">
             @csrf
             <input type="hidden" name="travel_package_id" value="{{ $travel_package->id }}">
 
@@ -377,7 +380,8 @@
         
           <!-- uploader custom -->
           <div class="upload-wrap">
-            <input type="file" id="buktiBayar" class="file-input" accept="image/*" required>
+            <input type="file" id="buktiBayar" name="file" class="file-input" accept="image/*" form="bookingForm" required>
+
             <label for="buktiBayar" class="file-label">
               <i class="bx bx-upload"></i>
               <span>Pilih Bukti (JPG/PNG)</span>
@@ -389,7 +393,7 @@
       </div>
 
       <div class="modal-footer">
-        <button id="submitPayment" class="btn btn-primary" disabled>
+        <button type="submit" id="submitPayment" class="btn btn-primary" form="bookingForm" disabled>
           <i class="bx bx-upload"></i> Kirim Bukti
         </button>
       </div>
@@ -507,14 +511,20 @@
       submitPay.disabled = !file;
     })
 
-    submitPay?.addEventListener('click', () => {
-      // TODO: ganti ke submit ke server bila diperlukan (FormData + fetch)
-      closeModal();
-      showNotice(
-        `Terimakasih, pembayaran Anda akan diproses admin kami selama <b>1x24 jam</b>.<br>
-         Jika tidak ada email yang masuk selama itu, harap hubungi pengelola wisata
-         <a href="https://wa.me/{{ $wa }}?text={{ $waText }}" target="_blank">di sini</a>.`
-      );
+    const formEl = document.getElementById('bookingForm');
+    submitPay?.addEventListener('click', (e) => {
+      // karena button sudah type="submit" + form="bookingForm", event ini akan submit.
+      // kita hanya cegah submit kalau data belum lengkap.
+      if (!paymentMethodHidden.value || !buktiBayar.files?.length) {
+        e.preventDefault();
+        const warn = document.createElement('div');
+        warn.className = 'alert';
+        warn.innerHTML = 'Pilih metode & unggah bukti pembayaran terlebih dahulu.<i class="bx bx-x alert-close" style="position:absolute; right:.6rem; top:.4rem; cursor:pointer;"></i>';
+        document.body.appendChild(warn);
+        warn.querySelector('.alert-close')?.addEventListener('click', ()=> warn.remove());
+        setTimeout(()=> warn.remove(), 5000);
+      }
+      // jika lengkap → biarkan submit normal (TIDAK closeModal & TIDAK showNotice di sini)
     });
 
     /* ===== Notifikasi dinamis (re-usable) ===== */
