@@ -1,391 +1,231 @@
 @extends('layouts.frontend')
 
-{{-- @php
-    function convertToIDR($amountInUSD)
-    {
-        $exchangeRate = 15000; // Contoh nilai tukar USD ke IDR
-        $amountInIDR = $amountInUSD * $exchangeRate;
-        return $amountInIDR;
-    }
-@endphp --}}
+@push('style-alt')
+  {{-- Pakai SATU Swiper CSS saja --}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
+  {{-- Boxicons for icons --}}
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
 
-<link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
+  <style>
+    :root{ --primary:#3366FF; --primary-600:#254ecf; --ink:#0f172a; --muted:#64748b; --surface:#fff; }
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-<style>
-  /* Brand Colors */
-  :root {
-    --primary-color: #3366FF; /* Blue from font */
-    --accent-color: #FF6600;  /* Pin icon color */
-  }
+    .button{ display:inline-flex; align-items:center; gap:.5rem; padding:.85rem 1.25rem;
+      border-radius:.9rem; font-weight:700; text-decoration:none; border:0; cursor:pointer; }
+    .button.primary{ background:linear-gradient(135deg,var(--primary),var(--primary-600)); color:#fff;
+      box-shadow:0 10px 22px rgba(51,102,255,.25); transition:.25s; }
+    .button.primary:hover{ transform:translateY(-2px); box-shadow:0 14px 26px rgba(37,78,207,.35); }
 
-  /* Base Button Styles (Bootstrap-like) */
-  .btn {
-    display: inline-block;
-    font-weight: 400;
-    color: #fff;
-    text-align: center;
-    vertical-align: middle;
-    user-select: none;
-    background-color: transparent;
-    border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.25rem;
-    transition: color .15s ease-in-out,
-                background-color .15s ease-in-out,
-                border-color .15s ease-in-out,
-                box-shadow .15s ease-in-out;
-    cursor: pointer;
-  }
+    /* ===== HERO (rename .content -> .hero-content to avoid conflicts) ===== */
+    .hero{ position:relative; height:100vh; min-height:520px; }
+    .hero .swiper{ height:100%; }
+    .hero .swiper-slide{ position:relative; }
+    .hero .bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(110%); }
+    .hero .overlay{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.45)); }
+    .hero .hero-content{ position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:0 1.25rem; }
+    .hero h1{ color:#fff; font-size:clamp(2rem,5.2vw,3.5rem); font-weight:900; letter-spacing:.2px; margin:0 0 .5rem; }
+    .hero p{ color:#e5e7eb; font-size:clamp(1rem,1.2vw,1.25rem); margin:0; opacity:.95; }
+    .hero .cta{ margin-top:1.25rem; }
+    .hero .badge{ display:inline-flex; align-items:center; gap:.5rem; color:#fff;
+      background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
+      padding:.35rem .7rem; border-radius:999px; font-weight:700; margin-bottom:.75rem; }
+    .scroll-hint{ position:absolute; left:0; right:0; bottom:20px; margin:auto; width:max-content; color:#fff; opacity:.8;
+      display:flex; align-items:center; gap:.4rem; font-weight:600; animation:floaty 2.2s ease-in-out infinite; }
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 
-  /* Primary Button */
-  .btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: #fff;
-  }
-  .btn-primary:hover {
-    background-color: #254dcf;
-    border-color: #254dcf;
-    color: #fff;
-  }
+    .section { padding:64px 0; }
+    .container{ width:min(1120px,92%); margin:0 auto; }
 
-  /* Hero Section Fullscreen Background Image */
-  .hero-section {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-  }
-  .hero-section .swiper-slide {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  .hero-section .swiper-slide img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .hero-section .bg__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: brightness(70%);
-    z-index: 1;
-  }
-  .hero-section .islands__container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-    flex-direction: column;
-    padding: 0 1rem;
-    text-align: center;
-  }
-  .hero-section .islands__title {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    color: var(--primary-color);
-  }
-  .hero-section .islands__description {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
+    .features{ display:grid; gap:1rem; grid-template-columns:repeat(1,minmax(0,1fr)); }
+    @media (min-width:768px){ .features{ grid-template-columns:repeat(3,1fr); } }
+    .feature{ background:linear-gradient(180deg,#fff,#f8fbff); border:1px solid #edf2ff; border-radius:1rem; padding:18px; display:flex; gap:12px; }
+    .feature i{ color:var(--primary); font-size:22px; margin-top:2px; }
+    .feature h4{ margin:0 0 4px; font-weight:800; color:#1f2a44; }
+    .feature p{ margin:0; color:var(--muted); font-size:.98rem; }
 
-  /* Swiper Navigation & Pagination Colors */
-  .swiper-button-next, .swiper-button-prev {
-    color: var(--primary-color) !important;
-  }
-  .swiper-pagination-bullet-active {
-    background-color: var(--primary-color) !important;
-  }
+    .grid{ display:grid; gap:1rem; }
+    .grid.popular{ grid-template-columns:repeat(1,minmax(0,1fr)); }
+    @media (min-width:640px){ .grid.popular{ grid-template-columns:repeat(2,1fr); } }
+    @media (min-width:992px){ .grid.popular{ grid-template-columns:repeat(3,1fr); } }
+    .card{ background:var(--surface); border:1px solid #eef2f9; border-radius:1rem; overflow:hidden;
+      box-shadow:0 12px 30px rgba(51,102,255,.06); transition:transform .25s, box-shadow .25s; }
+    .card:hover{ transform:translateY(-4px); box-shadow:0 18px 38px rgba(51,102,255,.10); }
+    .card .thumb{ aspect-ratio:4/3; width:100%; object-fit:cover; display:block; }
+    .card .body{ padding:14px 16px 18px; }
+    .card .title{ font-weight:800; color:#0f172a; margin:2px 0 4px; }
+    .card .muted{ color:#64748b; }
 
-  .navbar.navbar-scrolled {
-    background-color: #fff !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: background .3s;
-  }
-</style>
+    .swiper-button-next,.swiper-button-prev{ color:#fff; opacity:.85; }
+    .swiper-button-next:hover,.swiper-button-prev:hover{ opacity:1; }
+    .swiper-pagination-bullet{ background:#fff; opacity:.6; }
+    .swiper-pagination-bullet-active{ background:var(--primary); opacity:1; }
+  </style>
 @endpush
 
+
 @section('content')
-    <!--==================== HOME ====================-->
-    {{-- <section>
-        <div class="swiper-container">
-            <div>
-                <section class="islands">
-                    <img src="{{ asset('frontend/assets/img/hero.jpg') }}" alt="" class="islands__bg" />
-                    <div class="bg__overlay">
-                        <div class="islands__container container">
-                            <div class="islands__data" style="z-index: 99; position: relative">
-                                <h1 class="islands__title">
-                                    Sulawesi Tenggara
-                                </h1>
-                                <p class="islands__description">
-                                    Selamat datang di wisata Sulawesi Tenggara
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+
+  {{-- ==================== HERO ==================== --}}
+  <section class="hero">
+    <div class="swiper hero-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img class="bg" src="{{ asset('frontend/assets/img/hero.jpg') }}" alt="Sulawesi Tenggara">
+          <div class="overlay"></div>
+          <div class="hero-content">  {{-- <- di sini --}}
+            <div data-aos="fade-up" data-aos-delay="50">
+              <span class="badge"><i class="bx bxs-map-pin"></i> Sulawesi Tenggara</span>
+              <h1>Jelajahi Surga Wisata di Timur Indonesia</h1>
+              <p>Destinasi cantik, laut sebening kristal, budaya yang hangat.</p>
+              <div class="cta">
+                <a href="{{ route('travel_package.index') }}" class="button primary">
+                  <i class="bx bx-compass"></i> Detail Wisata
+                </a>
+              </div>
             </div>
-        </div>
-    </section> --}}
-
-    <section class="swiper mySwiper">
-        <div class="swiper-wrapper">
-            <!-- Slide 1 -->
-            <div class="swiper-slide">
-                <img src="{{ asset('frontend/assets/img/hero.jpg') }}" class="islands__bg" alt="Sulawesi Tenggara" />
-                <div class="bg__overlay">
-                    <div class="islands__container container">
-                        <div class="islands__data" style="z-index: 99; position: relative">
-                            <h1 class="islands__title">Sulawesi Tenggara</h1>
-                            <p class="islands__description">Selamat datang di wisata Sulawesi Tenggara</p>
-                            <a href="{{ route('travel_package.index') }}" class="islands__description button button-booking" style="margin-top: 50px">Detail Wisata</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 2 -->
-            @foreach ($travel_packages as $package)
-                <div class="swiper-slide">
-                    <img src="{{ Storage::url(optional($package->galleries->first())->images) }}" class="islands__bg" alt="Wisata 2" />
-                    <div class="bg__overlay">
-                        <div class="islands__container container">
-                            <div class="islands__data" style="z-index: 99; position: relative">
-                                <h1 class="islands__title">{{ $package->location }}</h1>
-                                <div class="islands__description text-white">{!! $package->description !!}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-
-            <!-- Tambah slide lainnya sesuai kebutuhan -->
-        </div>
-
-        <!-- Optional navigation -->
-        {{-- <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div> --}}
-    </section>
-
-
-    {{-- <div class="swiper-container wisataSwiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="{{ Storage::url($package->galleries->first()->images) }}" alt="{{ $package->location }}">
-                <div class="card-body">
-                    <h3>{{ $package->location }}</h3>
-                    <p>{!! $package->description !!}</p>
-                </div>
-                <!-- konten slide ke-1 -->
-            </div>
-            <!-- optional: pagination, navigation -->
-        </div> --}}
-
-    <!--==================== WISATA SLIDER ====================-->
-    {{-- <div class="swiper wisataSwiper">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="card">
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
-        </div> --}}
-
-
-
-    <!--==================== POPULAR ====================-->
-    {{-- <section id="popular" class="section pt-5">
-        <div class="container">
-      
-          <h2 class="section__title text-center mb-4" data-aos="fade-up">
-            Tempat Populer
-          </h2>
-      
-          <div class="popular__container swiper" data-aos="fade-up">
-            <div class="swiper-wrapper">
-              @foreach($travel_packages as $package)
-                <div class="swiper-slide">
-                  <div class="card popular__card border-0 h-100">
-                    <a href="{{ route('travel_package.show', $package->slug) }}" class="text-decoration-none">
-                      <img src="{{ Storage::url(optional($package->galleries->first())->images) }}" 
-                           alt="{{ $package->location }}" 
-                           class="card-img-top popular__img" />
-                      <div class="card-body text-center popular__data">
-                        <h3 class="popular__price"><span>Rp</span>{{ convertToIDR($package->price) }}</h3>
-                        <h4 class="popular__title">{{ $package->location }}</h4>
-                        <p class="popular__description">{{ $package->type }}</p>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              @endforeach
-            </div>
-      
-            <!-- Navigation -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-      
-            <!-- Pagination -->
-            <div class="swiper-pagination mt-4"></div>
           </div>
         </div>
-      </section> --}}
-
-    <!--==================== VALUE ====================-->
-    {{-- <section class="value section" id="value">
-        <div class="value__container container grid">
-            <div class="value__images">
-                <div class="value__orbe"></div>
-
-                <div class="value__img">
-                    <img src="{{ asset('frontend/assets/img/team.jpg') }}" alt="" />
-                </div>
+  
+        {{-- slide lain --}}
+        @foreach ($travel_packages as $package)
+          @php
+            $cover = optional($package->galleries->first())->images;
+            $src   = $cover ? Storage::url($cover) : asset('frontend/assets/img/hero.jpg');
+          @endphp
+          <div class="swiper-slide">
+            <img class="bg lazy" data-src="{{ $src }}" alt="{{ $package->location ?? 'Destinasi' }}">
+            <div class="overlay"></div>
+            <div class="hero-content">
+              <div data-aos="fade-up">
+                <span class="badge"><i class="bx bxs-pin"></i> {{ $package->location ?? 'Lokasi wisata' }}</span>
+                <h1>{{ $package->name ?? 'Paket Wisata' }}</h1>
+                @if(!empty($package->description))
+                  <p>{!! \Illuminate\Support\Str::limit(strip_tags($package->description), 140) !!}</p>
+                @endif
+              </div>
             </div>
+          </div>
+        @endforeach
+      </div>
+  
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div>
+      <div class="scroll-hint"><i class="bx bx-chevrons-down"></i> gulir untuk info</div>
+    </div>
+  </section>
+  
 
-            <div class="value__content">
-                <div class="value__data">
-                    <h2 class="section__title">
-                        Pengalaman Yang Kami Janjikan Kepada Anda
-                    </h2>
-                    <p class="value__description">
-                        Kami selalu siap melayani dengan memberikan pelayanan terbaik untuk Anda.
-                        Kami membuat pilihan yang baik untuk bepergian ke seluruh wisata yang ada di Sulawesi Tenggara.
-                    </p>
-                </div>
-
-                <div class="value__accordion">
-                    <div class="value__accordion-item">
-                        <header class="value__accordion-header">
-                            <i class="bx bxs-shield-x value-accordion-icon"></i>
-                            <h3 class="value__accordion-title">
-                                Tempat terbaik di Sulawesi Tenggara
-                            </h3>
-                            <div class="value__accordion-arrow">
-                                <i class="bx bxs-down-arrow"></i>
-                            </div>
-                        </header>
-
-                        <div class="value__accordion-content">
-                            <p class="value__accordion-description">
-                                Kami menyediakan tempat-tempat terbaik di sekitar
-                                Sumbawa dan memiliki kualitas yang baik
-                                di sana.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="value__accordion-item">
-                        <header class="value__accordion-header">
-                            <i class="bx bxs-x-square value-accordion-icon"></i>
-                            <h3 class="value__accordion-title">
-                                Harga Terjangkau Untuk Anda!
-                            </h3>
-                            <div class="value__accordion-arrow">
-                                <i class="bx bxs-down-arrow"></i>
-                            </div>
-                        </header>
-
-                        <div class="value__accordion-content">
-                            <p class="value__accordion-description">
-                                Kami mencoba untuk membuat anggaran Anda sesuai dengan
-                                tujuan wisata yang ingin Anda tuju.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="value__accordion-item">
-                        <header class="value__accordion-header">
-                            <i class="bx bxs-check-square value-accordion-icon"></i>
-                            <h3 class="value__accordion-title">
-                                Jaminan Keamanan
-                            </h3>
-                            <div class="value__accordion-arrow">
-                                <i class="bx bxs-down-arrow"></i>
-                            </div>
-                        </header>
-
-                        <div class="value__accordion-content">
-                            <p class="value__accordion-description">
-                                Kami memastikan bahwa layanan kami memiliki
-                                keamanan yang sangat baik.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  {{-- ==================== FEATURE STRIP ==================== --}}
+  <section class="section">
+    <div class="container">
+      <div class="features">
+        <div class="feature" data-aos="fade-up" data-aos-delay="0">
+          <i class="bx bxs-shield"></i>
+          <div>
+            <h4>Aman & Terjamin</h4>
+            <p>Partner resmi, pemandu lokal berpengalaman, dan dukungan 24/7.</p>
+          </div>
         </div>
-    </section> --}}
+        <div class="feature" data-aos="fade-up" data-aos-delay="80">
+          <i class="bx bxs-happy-beaming"></i>
+          <div>
+            <h4>Pengalaman Berkesan</h4>
+            <p>Rangkaian aktivitas curated yang bikin liburan kamu tak terlupakan.</p>
+          </div>
+        </div>
+        <div class="feature" data-aos="fade-up" data-aos-delay="160">
+          <i class="bx bxs-purchase-tag-alt"></i>
+          <div>
+            <h4>Harga Transparan</h4>
+            <p>Tidak ada biaya tersembunyi. Sesuaikan paket sesuai anggaranmu.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  {{-- ==================== POPULAR DESTINATIONS (reveal on scroll) ==================== --}}
+  <section class="section" id="popular">
+    <div class="container">
+      <h2 class="section__title" style="text-align:center; font-weight:900; color:#1f2a44; margin-bottom:6px;" data-aos="fade-up">
+        Rekomendasi Untuk Anda
+      </h2>
+      <p class="muted" style="text-align:center; margin-bottom:22px;" data-aos="fade-up" data-aos-delay="80">
+        Pilihan favorit wisatawan—langsung dari yang paling banyak dicari.
+      </p>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-    {{-- <script>
-        // Hero slider dengan autoplay 1 detik
-        const swiper = new Swiper('.mySwiper', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            autoplay: {
-                delay: 2500, // berpindah setiap 1 detik
-                disableOnInteraction: false,
-            },
-            effect: 'fade',
-        });
+      <div class="grid popular">
+        @foreach ($travel_packages as $package)
+          @php
+            $cover = optional($package->galleries->first())->images;
+            $src   = $cover ? Storage::url($cover) : asset('frontend/assets/img/hero.jpg');
+          @endphp
+          <article class="card" data-aos="fade-up">
+            <a href="{{ route('travel_package.show', $package->slug) }}" class="stretched-link" aria-label="Buka {{ $package->name ?? 'Paket' }}"></a>
+            <img class="thumb lazy" data-src="{{ $src }}" alt="{{ $package->name ?? 'Foto' }}">
+            <div class="body">
+              <div class="title">{{ $package->name ?? $package->location ?? '-' }}</div>
+              <div class="muted">{{ $package->type }}</div>
+            </div>
+          </article>
+        @endforeach
+      </div>
+    </div>
+  </section>
 
-        // Wisata slider dengan autoplay 1 detik
-        const wisataSwiper = new Swiper('.wisataSwiper', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            loop: true,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                },
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            autoplay: {
-                delay: 1000, // tambahkan autoplay di sini juga
-                disableOnInteraction: false,
-            },
-        });
-    </script> --}}
 @endsection
+
+@push('script-alt')
+  {{-- Swiper + AOS --}}
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // ===== Swiper Hero
+    const heroSwiper = new Swiper('.hero-swiper', {
+      loop: true,
+      effect: 'fade',
+      fadeEffect: { crossFade: true },
+      autoplay: { delay: 3500, disableOnInteraction: false },
+      pagination: { el: '.swiper-pagination', clickable: true },
+      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+    });
+
+    // ===== AOS (reveal on scroll)
+    AOS.init({
+      once: true,
+      duration: 650,
+      easing: 'ease-out-cubic',
+      offset: 80
+    });
+
+    // ===== Lazy-load untuk gambar (di hero & kartu)
+    const lazyImgs = document.querySelectorAll('img.lazy');
+    const io = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries, obs) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              const img = e.target;
+              const src = img.getAttribute('data-src');
+              if (src) { img.src = src; img.removeAttribute('data-src'); }
+              img.classList.remove('lazy');
+              obs.unobserve(img);
+            }
+          });
+        }, { rootMargin: '200px 0px' })
+      : null;
+
+    lazyImgs.forEach(img => {
+      if (io) io.observe(img); else img.src = img.getAttribute('data-src');
+    });
+
+    // ===== Navbar putih ketika discroll (opsional)
+    document.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      if (!nav) return;
+      if (window.scrollY > 8) nav.classList.add('navbar-scrolled');
+      else nav.classList.remove('navbar-scrolled');
+    });
+  </script>
+@endpush
