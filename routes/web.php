@@ -23,6 +23,7 @@ Route::group(['middleware' => ['check.role:admin,dinas,pengelola', 'auth'], 'pre
 
     // booking
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only(['index', 'destroy', 'show']);
+    Route::post('/bookings/{booking}/approve', [\App\Http\Controllers\Admin\BookingController::class, 'approve'])->name('bookings.approve');
     // travel packages
     Route::resource('travel_packages', \App\Http\Controllers\Admin\TravelPackageController::class)->except('show');
     Route::resource('travel_packages.galleries', \App\Http\Controllers\Admin\GalleryController::class)->except(['create', 'index', 'show']);

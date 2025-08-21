@@ -151,10 +151,12 @@
                         </form>
           
                         @if (!in_array($status, ['di-setujui','disetujui']))
-                          <a href="{{ route('admin.bookings.show', $booking->id) }}"
-                             class="btn btn-sm btn-outline-primary" title="Setujui">
-                            <i class="fas fa-check-circle"></i>
-                          </a>
+                          <form action="{{ route('admin.bookings.approve', $booking->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-outline-primary" title="Setujui">
+                              <i class="fas fa-check-circle"></i>
+                            </button>
+                          </form>
                         @endif
                       </td>
                     </tr>

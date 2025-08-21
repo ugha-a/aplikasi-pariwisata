@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use QrCode;
 use App\Models\Booking;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\BookingApprovedMail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class BookingController extends Controller
 {
@@ -95,4 +100,36 @@ class BookingController extends Controller
             'alert-type' => 'danger'
         ]);
     }
+
+    public function approve($id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        // Pastikan folder 'qr' ada di disk 'public'
+        Storage::disk('public')->makeDirectory('qr');
+
+        // Nama file relatif di dalam disk 'public'
+        $qrFile = 'qr/booking-' . $booking->id . '.png';
+
+        // Generate PNG ke memory, lalu simpan via Storage
+        $png = QrCode::format('png')
+            ->size(300)
+            ->margin(1)
+            ->generate("BOOKING-{$booking->id}");
+
+        Storage::disk('public')->put($qrFile, $png);
+
+        // Path absolut untuk embed di email (dibutuhkan oleh ->embed())
+        $qrAbsolutePath = storage_path('app/public/' . $qrFile);
+
+        // Kirim email (constructor mailable: __construct($booking, string $qrAbsolutePath))
+        Mail::to($booking->email)->send(
+            new BookingApprovedMail($booking, $qrAbsolutePath)
+        );
+
+        $booking->update(['status' => 'disetujui']);
+
+        return back()->with('message', 'Booking disetujui dan email terkirim!');
+    }
+
 }
