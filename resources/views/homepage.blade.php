@@ -1,64 +1,175 @@
 @extends('layouts.frontend')
 
 @push('style-alt')
-  {{-- Pakai SATU Swiper CSS saja --}}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+  <!-- Libs -->
+  {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"> --}}
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
-  {{-- Boxicons for icons --}}
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
 
   <style>
-    :root{ --primary:#3366FF; --primary-600:#254ecf; --ink:#0f172a; --muted:#64748b; --surface:#fff; }
+    /* ================== Design Tokens ================== */
+    :root{
+      --primary:#3366FF;        /* biru */
+      --accent:#FF6600;         /* oranye */
+      --ink:#0f172a;            /* teks utama */
+      --muted:#64748b;          /* teks redup */
+      --ink-weak:#1f2a44;
+      --surface:#ffffff;        /* latar putih */
+      --shadow: 0 14px 40px rgba(51,102,255,.10);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+    }
 
-    .button{ display:inline-flex; align-items:center; gap:.5rem; padding:.85rem 1.25rem;
-      border-radius:.9rem; font-weight:700; text-decoration:none; border:0; cursor:pointer; }
-    .button.primary{ background:linear-gradient(135deg,var(--primary),var(--primary-600)); color:#fff;
-      box-shadow:0 10px 22px rgba(51,102,255,.25); transition:.25s; }
-    .button.primary:hover{ transform:translateY(-2px); box-shadow:0 14px 26px rgba(37,78,207,.35); }
+    /* ============ Aksen Nusantara (pattern util) ============ */
+    .u-ornament { position: relative; }
+    .u-ornament::before{
+      content:""; position:absolute; inset-inline:0; top:-10px; height:10px;
+      background:
+        repeating-linear-gradient(45deg, var(--primary) 0 12px, transparent 12px 24px),
+        repeating-linear-gradient(-45deg, var(--accent) 0 12px, transparent 12px 24px);
+      background-size:24px 24px;
+      opacity:.35; pointer-events:none;
+    }
+    /* garis aksen tipis */
+    .u-line{
+      height:4px; background:linear-gradient(90deg,var(--accent),var(--primary));
+      border-radius:999px; opacity:.75;
+    }
 
-    /* ===== HERO (rename .content -> .hero-content to avoid conflicts) ===== */
-    .hero{ position:relative; height:100vh; min-height:520px; }
-    .hero .swiper{ height:100%; }
+    /* =============== Komponen umum =============== */
+    .container{ width:min(1120px,92%); margin-inline:auto; }
+    .section{ padding:72px 0; }
+    .section__eyebrow{
+      display:inline-flex; align-items:center; gap:.5rem;
+      font-weight:800; letter-spacing:.4px; text-transform:uppercase;
+      color:var(--accent); font-size:.85rem;
+    }
+    .section__title{
+      font-size:clamp(1.6rem,3.8vw,2.25rem);
+      font-weight:900; color:var(--ink-weak); margin:.25rem 0 .75rem;
+      letter-spacing:.2px;
+    }
+    .section__lead{ color:var(--muted); max-width:60ch; }
+
+    .button{
+      display:inline-flex; align-items:center; gap:.5rem; padding:.9rem 1.25rem;
+      border-radius:999px; font-weight:800; text-decoration:none; border:2px solid transparent; cursor:pointer;
+      transition:transform .25s, box-shadow .25s, background .25s, color .25s, border-color .25s;
+    }
+    .button.primary{
+      background:linear-gradient(135deg,var(--primary),#254ecf); color:#fff; border-color:transparent;
+      box-shadow:0 12px 28px rgba(51,102,255,.28);
+    }
+    .button.primary:hover{ transform:translateY(-3px); box-shadow:0 18px 38px rgba(51,102,255,.35); }
+    .button.ghost{
+      background:transparent; color:var(--primary); border-color:var(--primary);
+    }
+    .button.ghost:hover{ background:var(--primary); color:#fff; }
+
+    /* ================= HERO (FIX HEIGHT) ================= */
+    .hero{
+      position:relative;
+      height: clamp(560px, 78vh, 880px); /* height pasti agar swiper 100% bekerja */
+      display:grid;
+    }
+    .hero .swiper,
+    .hero .swiper-wrapper,
+    .hero .swiper-slide{ height:100%; }
+
     .hero .swiper-slide{ position:relative; }
-    .hero .bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(110%); }
-    .hero .overlay{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.45)); }
-    .hero .hero-content{ position:absolute; inset:0; display:grid; place-items:center; text-align:center; padding:0 1.25rem; }
-    .hero h1{ color:#fff; font-size:clamp(2rem,5.2vw,3.5rem); font-weight:900; letter-spacing:.2px; margin:0 0 .5rem; }
-    .hero p{ color:#e5e7eb; font-size:clamp(1rem,1.2vw,1.25rem); margin:0; opacity:.95; }
-    .hero .cta{ margin-top:1.25rem; }
-    .hero .badge{ display:inline-flex; align-items:center; gap:.5rem; color:#fff;
+    .hero .bg{
+      position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+      filter:saturate(112%) contrast(1.02);
+      transform:scale(1.02);
+    }
+    .hero .overlay{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
+    }
+    .hero .hero-content{
+      position:relative; z-index:1; display:grid; place-items:center; text-align:center; padding:0 1.25rem;
+      height:100%;
+    }
+    .hero .badge{
+      display:inline-flex; align-items:center; gap:.5rem; color:#fff;
       background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
-      padding:.35rem .7rem; border-radius:999px; font-weight:700; margin-bottom:.75rem; }
-    .scroll-hint{ position:absolute; left:0; right:0; bottom:20px; margin:auto; width:max-content; color:#fff; opacity:.8;
-      display:flex; align-items:center; gap:.4rem; font-weight:600; animation:floaty 2.2s ease-in-out infinite; }
-    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+      padding:.4rem .75rem; border-radius:999px; font-weight:800; margin-bottom:.75rem;
+    }
+    .hero h1{
+      color:#fff; font-size:clamp(2rem,5.5vw,3.6rem); font-weight:1000; letter-spacing:.3px;
+      text-shadow:0 10px 28px rgba(0,0,0,.28);
+      margin:0 0 .5rem;
+    }
+    .hero p{ color:#e7eefc; font-size:clamp(1rem,1.25vw,1.25rem); margin:0; opacity:.95; }
+    .hero .cta{ margin-top:1.25rem; display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap; }
 
-    .section { padding:64px 0; }
-    .container{ width:min(1120px,92%); margin:0 auto; }
-
-    .features{ display:grid; gap:1rem; grid-template-columns:repeat(1,minmax(0,1fr)); }
+    /* ================= Feature Strip ================= */
+    .features{ display:grid; gap:16px; grid-template-columns:repeat(1,minmax(0,1fr)); }
     @media (min-width:768px){ .features{ grid-template-columns:repeat(3,1fr); } }
-    .feature{ background:linear-gradient(180deg,#fff,#f8fbff); border:1px solid #edf2ff; border-radius:1rem; padding:18px; display:flex; gap:12px; }
-    .feature i{ color:var(--primary); font-size:22px; margin-top:2px; }
-    .feature h4{ margin:0 0 4px; font-weight:800; color:#1f2a44; }
+    .feature{
+      background:var(--surface);
+      border:1px solid #eef2ff; border-radius:var(--radius-lg);
+      padding:18px 18px 18px 16px; display:flex; gap:14px; align-items:flex-start;
+      box-shadow: var(--shadow);
+      position:relative; overflow:hidden;
+    }
+    .feature::after{
+      content:""; position:absolute; inset-inline-start:0; inset-block:0; width:6px;
+      background:linear-gradient(180deg,var(--accent),var(--primary));
+    }
+    .feature i{
+      --size:40px;
+      width:var(--size); height:var(--size); flex:0 0 var(--size);
+      display:grid; place-items:center; border-radius:12px;
+      border:2px solid var(--primary); color:var(--primary); font-size:22px;
+      background:#f6f9ff;
+    }
+    .feature h4{ margin:2px 0 6px; font-weight:900; color:var(--ink-weak); }
     .feature p{ margin:0; color:var(--muted); font-size:.98rem; }
 
-    .grid{ display:grid; gap:1rem; }
+    /* ================= Popular Cards ================= */
+    .grid{ display:grid; gap:16px; }
     .grid.popular{ grid-template-columns:repeat(1,minmax(0,1fr)); }
     @media (min-width:640px){ .grid.popular{ grid-template-columns:repeat(2,1fr); } }
     @media (min-width:992px){ .grid.popular{ grid-template-columns:repeat(3,1fr); } }
-    .card{ background:var(--surface); border:1px solid #eef2f9; border-radius:1rem; overflow:hidden;
-      box-shadow:0 12px 30px rgba(51,102,255,.06); transition:transform .25s, box-shadow .25s; }
-    .card:hover{ transform:translateY(-4px); box-shadow:0 18px 38px rgba(51,102,255,.10); }
-    .card .thumb{ aspect-ratio:4/3; width:100%; object-fit:cover; display:block; }
-    .card .body{ padding:14px 16px 18px; }
-    .card .title{ font-weight:800; color:#0f172a; margin:2px 0 4px; }
-    .card .muted{ color:#64748b; }
 
-    .swiper-button-next,.swiper-button-prev{ color:#fff; opacity:.85; }
-    .swiper-button-next:hover,.swiper-button-prev:hover{ opacity:1; }
+    .card{
+      background:var(--surface); border:1px solid #eef2f9; border-radius:var(--radius-xl); overflow:hidden;
+      box-shadow: var(--shadow); transition:transform .25s, box-shadow .25s, border-color .25s;
+      position:relative; isolation:isolate;
+    }
+    .card:hover{ transform:translateY(-4px); box-shadow:0 18px 42px rgba(51,102,255,.14); border-color:#dfe7ff; }
+    .card .thumb{ aspect-ratio:4/3; width:100%; object-fit:cover; display:block; }
+    .card .body{ padding:16px 18px 20px; }
+    .card .title{ font-weight:900; color:var(--ink); margin:0 0 4px; letter-spacing:.2px; }
+    .card .muted{ color:var(--muted); }
+    .card::before{
+      content:""; position:absolute; top:12px; right:12px; width:34px; height:10px; border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--primary)); opacity:.9;
+    }
+
+    /* ================= Swiper ================= */
+    .swiper-button-next,.swiper-button-prev{ color:#fff; opacity:.95; filter:drop-shadow(0 6px 14px rgba(0,0,0,.35)); }
     .swiper-pagination-bullet{ background:#fff; opacity:.6; }
-    .swiper-pagination-bullet-active{ background:var(--primary); opacity:1; }
+    .swiper-pagination-bullet-active{ background:var(--accent); opacity:1; }
+
+    /* ================= Util ================= */
+    .scroll-hint{
+      position:absolute; left:0; right:0; bottom:18px; margin:auto; width:max-content; color:#fff; opacity:.9;
+      display:flex; align-items:center; gap:.4rem; font-weight:800; text-transform:uppercase; letter-spacing:.3px;
+      animation:floaty 2.2s ease-in-out infinite;
+    }
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+    @media(max-width:640px){
+      .section{ padding:56px 0; }
+      .hero .badge{ font-size:.9rem; }
+    }
+    .hero .swiper-pagination,
+    .hero .swiper-button-next,
+    .hero .swiper-button-prev {
+    display: none !important;
+    }
   </style>
 @endpush
 
@@ -66,13 +177,13 @@
 @section('content')
 
   {{-- ==================== HERO ==================== --}}
-  <section class="hero">
+  <section class="hero u-ornament">
     <div class="swiper hero-swiper">
       <div class="swiper-wrapper">
         <div class="swiper-slide">
           <img class="bg" src="{{ asset('frontend/assets/img/hero.jpg') }}" alt="Sulawesi Tenggara">
           <div class="overlay"></div>
-          <div class="hero-content">  {{-- <- di sini --}}
+          <div class="hero-content">
             <div data-aos="fade-up" data-aos-delay="50">
               <span class="badge"><i class="bx bxs-map-pin"></i> Sulawesi Tenggara</span>
               <h1>Jelajahi Surga Wisata di Timur Indonesia</h1>
@@ -81,12 +192,13 @@
                 <a href="{{ route('travel_package.index') }}" class="button primary">
                   <i class="bx bx-compass"></i> Detail Wisata
                 </a>
+                <a href="#popular" class="button ghost"><i class="bx bx-chevrons-down"></i> Lihat Rekomendasi</a>
               </div>
             </div>
           </div>
         </div>
-  
-        {{-- slide lain --}}
+
+        {{-- Slide dinamis dari paket --}}
         @foreach ($travel_packages as $package)
           @php
             $cover = optional($package->galleries->first())->images;
@@ -107,18 +219,21 @@
           </div>
         @endforeach
       </div>
-  
+
       <div class="swiper-button-prev"></div>
       <div class="swiper-button-next"></div>
       <div class="swiper-pagination"></div>
-      <div class="scroll-hint"><i class="bx bx-chevrons-down"></i> gulir untuk info</div>
+      <div class="scroll-hint"><i class="bx bx-chevrons-down"></i> Gulir</div>
     </div>
   </section>
-  
 
   {{-- ==================== FEATURE STRIP ==================== --}}
   <section class="section">
     <div class="container">
+      <div class="section__eyebrow"><i class="bx bxs-diamond"></i> Keunggulan Kami</div>
+      <h2 class="section__title">Layanan Andal untuk Perjalanan Berkesan</h2>
+      <div class="u-line" style="margin-bottom:18px;"></div>
+
       <div class="features">
         <div class="feature" data-aos="fade-up" data-aos-delay="0">
           <i class="bx bxs-shield"></i>
@@ -131,31 +246,28 @@
           <i class="bx bxs-happy-beaming"></i>
           <div>
             <h4>Pengalaman Berkesan</h4>
-            <p>Rangkaian aktivitas curated yang bikin liburan kamu tak terlupakan.</p>
+            <p>Kurasi aktivitas yang autentik—ramah keluarga hingga petualangan.</p>
           </div>
         </div>
         <div class="feature" data-aos="fade-up" data-aos-delay="160">
           <i class="bx bxs-purchase-tag-alt"></i>
           <div>
             <h4>Harga Transparan</h4>
-            <p>Tidak ada biaya tersembunyi. Sesuaikan paket sesuai anggaranmu.</p>
+            <p>Tanpa biaya tersembunyi. Pilih paket sesuai anggaranmu.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  {{-- ==================== POPULAR DESTINATIONS (reveal on scroll) ==================== --}}
+  {{-- ==================== POPULAR DESTINATIONS ==================== --}}
   <section class="section" id="popular">
     <div class="container">
-      <h2 class="section__title" style="text-align:center; font-weight:900; color:#1f2a44; margin-bottom:6px;" data-aos="fade-up">
-        Rekomendasi Untuk Anda
-      </h2>
-      <p class="muted" style="text-align:center; margin-bottom:22px;" data-aos="fade-up" data-aos-delay="80">
-        Pilihan favorit wisatawan—langsung dari yang paling banyak dicari.
-      </p>
+      <div class="section__eyebrow"><i class="bx bxs-hot"></i> Rekomendasi</div>
+      <h2 class="section__title">Destinasi Favorit Wisatawan</h2>
+      <p class="section__lead">Dipilih dari destinasi yang paling banyak dilihat dan diulas baik.</p>
 
-      <div class="grid popular">
+      <div class="grid popular" style="margin-top:22px;">
         @foreach ($travel_packages as $package)
           @php
             $cover = optional($package->galleries->first())->images;
@@ -173,59 +285,52 @@
       </div>
     </div>
   </section>
-
 @endsection
 
+
 @push('script-alt')
-  {{-- Swiper + AOS --}}
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    // ===== Swiper Hero
-    const heroSwiper = new Swiper('.hero-swiper', {
-      loop: true,
-      effect: 'fade',
-      fadeEffect: { crossFade: true },
-      autoplay: { delay: 3500, disableOnInteraction: false },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
-    });
+    window.addEventListener('DOMContentLoaded', () => {
+      // ===== Swiper Hero
+      const heroSwiper = new Swiper('.hero-swiper', {
+        loop: true,
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        autoplay: { delay: 3500, disableOnInteraction: false }
+        // tidak ada navigation & pagination
+        });
 
-    // ===== AOS (reveal on scroll)
-    AOS.init({
-      once: true,
-      duration: 650,
-      easing: 'ease-out-cubic',
-      offset: 80
-    });
+      // ===== AOS
+      AOS.init({ once: true, duration: 700, easing: 'ease-out-cubic', offset: 90 });
 
-    // ===== Lazy-load untuk gambar (di hero & kartu)
-    const lazyImgs = document.querySelectorAll('img.lazy');
-    const io = 'IntersectionObserver' in window
-      ? new IntersectionObserver((entries, obs) => {
-          entries.forEach(e => {
-            if (e.isIntersecting) {
-              const img = e.target;
-              const src = img.getAttribute('data-src');
-              if (src) { img.src = src; img.removeAttribute('data-src'); }
-              img.classList.remove('lazy');
-              obs.unobserve(img);
-            }
-          });
-        }, { rootMargin: '200px 0px' })
-      : null;
+      // ===== Lazy-load gambar
+      const lazyImgs = document.querySelectorAll('img.lazy');
+      const io = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries, obs) => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                const img = e.target;
+                const src = img.getAttribute('data-src');
+                if (src) { img.src = src; img.removeAttribute('data-src'); }
+                img.classList.remove('lazy');
+                obs.unobserve(img);
+              }
+            });
+          }, { rootMargin: '220px 0px' })
+        : null;
+      lazyImgs.forEach(img => { if (io) io.observe(img); else img.src = img.getAttribute('data-src'); });
 
-    lazyImgs.forEach(img => {
-      if (io) io.observe(img); else img.src = img.getAttribute('data-src');
-    });
-
-    // ===== Navbar putih ketika discroll (opsional)
-    document.addEventListener('scroll', () => {
-      const nav = document.querySelector('.navbar');
-      if (!nav) return;
-      if (window.scrollY > 8) nav.classList.add('navbar-scrolled');
-      else nav.classList.remove('navbar-scrolled');
+      // ===== Smooth scroll untuk anchor internal
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        a.addEventListener('click', e=>{
+          const id = a.getAttribute('href').slice(1);
+          const t = document.getElementById(id);
+          if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+        });
+      });
     });
   </script>
 @endpush

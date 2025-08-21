@@ -10,183 +10,146 @@
   <!--=============== SWIPER CSS ===============-->
   <link rel="stylesheet" href="{{ asset('frontend/assets/libraries/swiper-bundle.min.css') }}" />
 
-  <!--=============== CSS ===============-->
+  <!--=============== CSS GLOBAL PROJECT ===============-->
   <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}" />
 
-  {{-- penting: head memanggil stack ini --}}
+  {{-- tempat child view mendorong CSS tambahan --}}
   @stack('style-alt')
 
   <title>Sulawesi Tenggara</title>
 
+  <!--=============== LIB TAMBAHAN ===============-->
+  <link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+
+  <!--=============== CUSTOM STYLE (INLINE, BUKAN ) ===============-->
   <style>
+    /* ====== VARIABEL WARNA GLOBAL ====== */
     :root{
-        --logo-size: 95px;            /* desktop */
-        --logo-gap: 10px;
-        --brand-weight: 800;
-        --brand-size: 1.5rem;        /* ~18px */
-        --brand-letter: .1px;
-        --brand-accent: #ff8a00;      /* warna ikon peta */
-        }
+      --primary-color:#3366FF; /* biru */
+      --accent-color:#FF6600;  /* oranye */
+      --header-bg:#fff;
+      --header-shadow:rgba(0,0,0,.1);
+      --header-height:72px;
+    }
+    @media (max-width:768px){ :root{ --header-height:64px; } }
 
-        /* header pakai padding agar tinggi terasa lega */
-        .header { padding-block: 12px; }
-        .header .nav { display:flex; align-items:center; justify-content:space-between; }
+    /* ====== HEADER FIXED ====== */
+    .header{
+      position:fixed; inset-block-start:0; inset-inline:0;
+      height:var(--header-height);
+      background:var(--header-bg)!important;
+      box-shadow:0 2px 4px var(--header-shadow);
+      z-index:1000; display:flex; align-items:center; overflow:hidden;
+    }
+    .header .nav{ width:100%; display:flex; align-items:center; justify-content:space-between; }
+    .main{ padding-top:var(--header-height); }
 
-        /* Komposisi brand */
-        .nav__logo{
-        display:flex; align-items:center; gap: var(--logo-gap);
-        text-decoration:none;
-        }
+    .header::after{
+      content:"";
+      position:absolute;
+      inset-inline:0;
+      bottom:0;
+      height:8px;
+      background:
+        repeating-linear-gradient(
+          45deg, var(--primary-color) 0 12px, transparent 12px 24px
+        ),
+        repeating-linear-gradient(
+          -45deg, var(--accent-color) 0 12px, transparent 12px 24px
+        );
+      background-size:24px 24px;
+      opacity:.15; /* halus, elegan */
+      pointer-events:none;
+    }
+    .header::after {
+      opacity: .35; /* dari .15 → .35 */
+    }
 
-        .brand-logo__box{
-            width: var(--logo-size);
-            height: var(--logo-size);
-            flex: 0 0 var(--logo-size);
-            display:inline-block;
-            background-repeat:no-repeat;
-            background-position:center;
-            background-size:contain;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.06); /* halus saja */
-        }
+    /* ====== BRAND DI NAV ====== */
+    .nav__logo{ display:flex; align-items:center; gap:8px; font-weight:700; text-decoration:none; color:#000; }
+    .brand-logo__box{
+      display:inline-block; width:32px; height:32px; flex:0 0 32px; border-radius:4px; overflow:hidden; line-height:0;
+      background-repeat:no-repeat; background-position:center; background-size:contain;
+    }
+    .logo-text{ display:inline-flex; align-items:center; gap:4px; }
+    @media (max-width:768px){ .brand-logo__box{ width:28px; height:28px; flex-basis:28px; } }
 
-        .logo-text{
-        display:inline-flex; align-items:center; gap:6px;
-        font-weight: var(--brand-weight);
-        font-size: var(--brand-size);
-        letter-spacing: var(--brand-letter);
-        line-height: 1;
-        }
+    /* ====== KOMPONEN CONTOH ====== */
+    .popular__card{ border:none; border-radius:.5rem; overflow:hidden; transition:transform .3s; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,.06); }
+    .popular__card:hover{ transform:translateY(-5px); }
+    .popular__img{ width:100%; border-radius:.5rem .5rem 0 0; display:block; object-fit:cover; }
+    .popular__data{ padding:1rem; text-align:center; }
+    .swiper-button-prev,.swiper-button-next{ color:var(--primary-color)!important; }
+    .swiper-pagination-bullet-active{ background-color:var(--primary-color)!important; }
 
-        /* kecilkan ikon peta agar jadi aksen, bukan fokus */
-        .logo-text .bx{
-        font-size: 1em;
-        color: var(--brand-accent);
-        translate: 0 1px; /* sedikit turun biar sejajar baseline */
-        }
+    /* ====== ANTI HORIZONTAL SCROLL + CONTAINER ====== */
+    html, body { overflow-x: hidden; }
+    .container{ max-width:1120px; width:100%; margin-inline:auto; padding-inline:16px; box-sizing:border-box; }
+    .scrollup{ position:fixed; inset-inline-end:16px; inset-block-end:20px; }
 
-        /* ===== Responsif yang halus ===== */
-        @media (max-width: 1024px){
-        :root{ --logo-size: 42px; --brand-size: 1.08rem; }
-        }
+    /* ===================================================================== */
+    /* ========================== FOOTER NUSANTARA ========================== */
+    /* ===================================================================== */
+    footer.footer--nusantara{
+      background:#fff; color:#333;
+      padding-block:48px 28px;
+      border-top:6px solid var(--accent-color);
+      position:relative; overflow-x:clip;
+    }
+    /* Ornamen zigzag halus (aksen Nusantara) */
+    footer.footer--nusantara::before{
+      content:""; position:absolute; inset-inline:0; top:0; height:10px;
+      background:
+        repeating-linear-gradient(45deg, var(--primary-color) 0 12px, transparent 12px 24px),
+        repeating-linear-gradient(-45deg, var(--accent-color) 0 12px, transparent 12px 24px);
+      background-size:24px 24px; opacity:.15; pointer-events:none;
+    }
 
-        @media (max-width: 768px){
-        :root{ --logo-size: 34px; --logo-gap: 8px; --brand-size: 1rem; }
-        .header{ padding-block: 10px; }
-        }
+    footer.footer--nusantara .footer__grid{
+      display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:32px; align-items:start;
+    }
+    @media (max-width:900px){ footer.footer--nusantara .footer__grid{ grid-template-columns:1fr; gap:20px; } }
 
-        /* Jika ada rule global img, kita memang tidak pakai <img> untuk logo */
-        .nav__logo img{ display:none!important; }
+    footer.footer--nusantara .footer__brand{
+      display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.2rem; text-decoration:none; color:#000; margin-bottom:12px;
+    }
+    footer.footer--nusantara .footer__brand .bx{ color:var(--accent-color); translate:0 1px; }
+    footer.footer--nusantara .footer__description{ line-height:1.6; color:#444; margin:0; overflow-wrap:anywhere; }
+
+    footer.footer--nusantara .footer__title{
+      font-size:.95rem; font-weight:700; text-transform:uppercase; color:var(--primary-color);
+      margin-bottom:14px; letter-spacing:.3px;
+    }
+
+    footer.footer--nusantara .footer__links{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+    footer.footer--nusantara .footer__link{ color:#444; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+    footer.footer--nusantara .footer__link:hover{ color:var(--accent-color); text-decoration:underline; text-underline-offset:3px; }
+
+    footer.footer--nusantara .footer__badges{ display:flex; flex-wrap:wrap; gap:10px; }
+    footer.footer--nusantara .chip{
+      padding:.5rem .9rem; border-radius:999px; border:1px solid var(--primary-color);
+      color:var(--primary-color); text-decoration:none; font-size:.9rem; font-weight:500; transition:.2s;
+    }
+    footer.footer--nusantara .chip:hover{ background:var(--primary-color); color:#fff; }
+
+    footer.footer--nusantara .footer__separator{ height:1px; background:#e6e6e6; margin-block:28px; }
+    footer.footer--nusantara .footer__bottom{
+      display:flex; justify-content:space-between; align-items:center; gap:16px; font-size:.9rem; color:#666;
+    }
+    @media (max-width:768px){ footer.footer--nusantara .footer__bottom{ flex-direction:column; text-align:center; } }
   </style>
-
-@push('style-alt')
-<link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-<style>
-  :root{
-    --primary-color:#3366FF;
-    --accent-color:#FF6600;
-    --header-bg:#fff;
-    --header-shadow:rgba(0,0,0,.1);
-    --header-height:72px;
-  }
-  @media (max-width:768px){
-    :root{ --header-height:64px; }
-  }
-
-  /* Header fixed + padding konten */
-  .header{
-    position:fixed; inset-block-start:0; inset-inline:0;
-    height:var(--header-height);
-    background:var(--header-bg)!important;
-    box-shadow:0 2px 4px var(--header-shadow);
-    z-index:1000; display:flex; align-items:center;
-    overflow:hidden;
-  }
-  .header .nav{
-    width:100%;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .main{ padding-top:var(--header-height); }
-
-  /* Warna teks navbar */
-  .header .nav__logo, .header .nav__link, .header .change-theme{ color:#000!important; }
-
-  /* Susunan logo + teks */
-.nav__logo{
-  display:flex; align-items:center; gap:8px;
-  font-weight:700; text-decoration:none;
-}
-
-  /* Kotak logo (pakai class baru supaya tidak bentrok) */
-  .brand-logo__box{
-  display:inline-block;
-  width:32px; height:32px; flex:0 0 32px;
-  border-radius:4px; overflow:hidden; line-height:0;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-}
-
-  .logo-text { display:inline-flex; align-items:center; gap:4px; }
-
-  @media (max-width:768px){
-  .brand-logo__box{ width:28px; height:28px; flex-basis:28px; }
-}
-
-.header{
-  position:fixed; inset-block-start:0; inset-inline:0;
-  height:72px; background:#fff!important;
-  box-shadow:0 2px 4px rgba(0,0,0,.1); z-index:1000;
-  display:flex; align-items:center; overflow:hidden;
-}
-.header .nav{ width:100%; display:flex; align-items:center; justify-content:space-between; }
-.main{ padding-top:72px; }
-@media (max-width:768px){ .header{ height:64px; } .main{ padding-top:64px; } }
-
-/* Link dan teks */
-.header .nav__logo, .header .nav__link, .header .change-theme{ color:#000!important; }
-.nav__logo{ display:flex; align-items:center; gap:8px; font-weight:700; text-decoration:none; }
-
-/* === LOGO TANPA <img> === */
-/* .brand-logo__box{
-  width:32px; height:32px; flex:0 0 32px;
-  display:inline-block; border-radius:4px; overflow:hidden; line-height:0;
-  background: url("{{ asset('images/logo-provinsi.png') }}") no-repeat center center;
-  background-size: contain;
-}
-@media (max-width:768px){
-  .brand-logo__box{ width:28px; height:28px; flex-basis:28px; }
-}
-.brand-logo__box{ outline:1px solid #f00; background-color:#eee; }
-
-.logo-text{ display:inline-flex; align-items:center; gap:4px; } */
-
-/* MATIKAN SEMUA <img> DI DALAM .nav__logo (jika ada sisa element lama) */
-/* .nav__logo img{ display:none !important; } */
-
-/* Opsional: komponen lain (kalau perlu) */
-.popular__card{ border:none; border-radius:.5rem; overflow:hidden; transition:transform .3s; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,.06); }
-.popular__card:hover{ transform:translateY(-5px); }
-.popular__img{ width:100%; border-radius:.5rem .5rem 0 0; display:block; object-fit:cover; }
-.popular__data{ padding:1rem; text-align:center; }
-.swiper-button-prev,.swiper-button-next{ color:#3366FF!important; }
-.swiper-pagination-bullet-active{ background-color:#3366FF!important; }
-</style>
-@endpush
 </head>
-
-
 
 <body>
   <!--==================== HEADER ====================-->
   <header class="header" id="header">
     <nav class="nav container">
-        <a href="{{ route('homepage') }}" class="nav__logo" aria-label="Sulawesi Tenggara">
-            <span class="brand-logo__box" style="background-image:url('/images/logo-provinsi.png');"></span>
-            <span class="logo-text">SULAWESI<i class="bx bxs-map"></i>TENGGARA</span>
-        </a>
-  
+      <a href="{{ route('homepage') }}" class="nav__logo" aria-label="Sulawesi Tenggara">
+        <span class="brand-logo__box" style="background-image:url('/images/logo-provinsi.png');"></span>
+        <span class="logo-text">SULAWESI<i class="bx bxs-map"></i>TENGGARA</span>
+      </a>
+
       <div class="nav__menu">
         <ul class="nav__list">
           <li class="nav__item">
@@ -206,7 +169,7 @@
           </li>
         </ul>
       </div>
-  
+
       <i class="bx bx-moon change-theme" id="theme-button"></i>
     </nav>
   </header>
@@ -216,52 +179,53 @@
     @yield('content')
   </main>
 
-  <!--==================== FOOTER ====================-->
-  <footer class="footer section">
-    <div class="footer__container container grid">
-      <div>
-        <a href="{{ route('homepage') }}" class="footer__logo">
-          SULAWESI<i class="bx bxs-map"></i>TENGGARA
-        </a>
-        <p class="footer__description">
-          Visi kami adalah membantu orang menemukan <br />
-          Tempat wisata terbaik di Sulawesi Tenggara.
-        </p>
+  <!--==================== FOOTER (NUSANTARA) ====================-->
+  <footer class="footer footer--nusantara">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Kolom Brand & Deskripsi -->
+        <div>
+          <a href="{{ route('homepage') }}" class="footer__brand" aria-label="Beranda">
+            <span class="brand-logo__box" style="background-image:url('/images/logo-provinsi.png');"></span>
+            SULAWESI<i class="bx bxs-map"></i>TENGGARA
+          </a>
+          <p class="footer__description">
+            Aplikasi Wisata Sulawesi Tenggara memudahkan Anda menemukan destinasi terbaik,
+            paket perjalanan, serta informasi akomodasi—semuanya dalam satu tempat yang sederhana dan cepat.
+          </p>
+        </div>
+
+        <!-- Kolom Navigasi -->
+        <div>
+          <h4 class="footer__title">Jelajah</h4>
+          <ul class="footer__links">
+            <li><a class="footer__link" href="{{ route('homepage') }}"><i class="bx bx-home-circle"></i>Beranda</a></li>
+            <li><a class="footer__link" href="{{ route('travel_package.index') }}"><i class="bx bx-map-alt"></i>Detail Wisata</a></li>
+            <li><a class="footer__link" href="{{ route('login') }}"><i class="bx bx-log-in-circle"></i>Login</a></li>
+          </ul>
+        </div>
+
+        <!-- Kolom Sosial & Kontak -->
+        <div>
+          <h4 class="footer__title">Tetap Terhubung</h4>
+          <div class="footer__badges" role="group" aria-label="tautan sosial">
+            <a href="#" class="chip"><i class="bx bxl-instagram"></i> Instagram</a>
+            <a href="#" class="chip"><i class="bx bxl-facebook"></i> Facebook</a>
+            <a href="#" class="chip"><i class="bx bxl-youtube"></i> YouTube</a>
+          </div>
+          <div style="height:10px"></div>
+          <div class="footer__badges" role="group" aria-label="kontak">
+            <a href="mailto:info@sultra.app" class="chip"><i class="bx bx-envelope"></i> info@sultra.app</a>
+            <a href="https://wa.me/6281234567890" class="chip"><i class="bx bxl-whatsapp"></i> WhatsApp</a>
+          </div>
+        </div>
       </div>
 
-      <div class="footer__content">
-        <div>
-          <h3 class="footer__title">About</h3>
-          <ul class="footer__links">
-            <li><a href="#" class="footer__link">About Us</a></li>
-            <li><a href="#" class="footer__link">Features</a></li>
-            <li><a href="#" class="footer__link">News & Blog</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="footer__title">Company</h3>
-          <ul class="footer__links">
-            <li><a href="#" class="footer__link">How We Work?</a></li>
-            <li><a href="#" class="footer__link">Capital</a></li>
-            <li><a href="#" class="footer__link">Security</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="footer__title">Support</h3>
-          <ul class="footer__links">
-            <li><a href="#" class="footer__link">FAQs</a></li>
-            <li><a href="#" class="footer__link">Support center</a></li>
-            <li><a href="#" class="footer__link">Contact Us</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="footer__title">Follow us</h3>
-          <ul class="footer__social">
-            <a href="#" class="footer__social-link"><i class="bx bxl-facebook-circle"></i></a>
-            <a href="#" class="footer__social-link"><i class="bx bxl-instagram-alt"></i></a>
-            <a href="#" class="footer__social-link"><i class="bx bxl-pinterest"></i></a>
-          </ul>
-        </div>
+      <div class="footer__separator"></div>
+
+      <div class="footer__bottom">
+        <span>© {{ date('Y') }} Sulawesi Tenggara Travel. All rights reserved.</span>
+        <span>Desain khas Nusantara • Aksen biru & oranye</span>
       </div>
     </div>
   </footer>
