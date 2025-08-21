@@ -2,25 +2,24 @@
 
 @push('style-alt')
   <!-- Libs -->
-  {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"> --}}
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
 
   <style>
     /* ================== Design Tokens ================== */
     :root{
-      --primary:#3366FF;        /* biru */
-      --accent:#FF6600;         /* oranye */
-      --ink:#0f172a;            /* teks utama */
-      --muted:#64748b;          /* teks redup */
+      --primary:#3366FF;
+      --accent:#FF6600;
+      --ink:#0f172a;
+      --muted:#64748b;
       --ink-weak:#1f2a44;
-      --surface:#ffffff;        /* latar putih */
+      --surface:#ffffff;
       --shadow: 0 14px 40px rgba(51,102,255,.10);
       --radius-xl: 18px;
       --radius-lg: 14px;
     }
 
-    /* ============ Aksen Nusantara (pattern util) ============ */
+    /* ============ Aksen Nusantara ============ */
     .u-ornament { position: relative; }
     .u-ornament::before{
       content:""; position:absolute; inset-inline:0; top:-10px; height:10px;
@@ -30,7 +29,6 @@
       background-size:24px 24px;
       opacity:.35; pointer-events:none;
     }
-    /* garis aksen tipis */
     .u-line{
       height:4px; background:linear-gradient(90deg,var(--accent),var(--primary));
       border-radius:999px; opacity:.75;
@@ -66,16 +64,15 @@
     }
     .button.ghost:hover{ background:var(--primary); color:#fff; }
 
-    /* ================= HERO (FIX HEIGHT) ================= */
+    /* ================= HERO ================= */
     .hero{
       position:relative;
-      height: clamp(560px, 78vh, 880px); /* height pasti agar swiper 100% bekerja */
+      height: clamp(560px, 78vh, 880px);
       display:grid;
     }
     .hero .swiper,
     .hero .swiper-wrapper,
     .hero .swiper-slide{ height:100%; }
-
     .hero .swiper-slide{ position:relative; }
     .hero .bg{
       position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
@@ -109,7 +106,7 @@
     .feature{
       background:var(--surface);
       border:1px solid #eef2ff; border-radius:var(--radius-lg);
-      padding:18px 18px 18px 16px; display:flex; gap:14px; align-items:flex-start;
+      padding:18px; display:flex; gap:14px; align-items:flex-start;
       box-shadow: var(--shadow);
       position:relative; overflow:hidden;
     }
@@ -128,11 +125,6 @@
     .feature p{ margin:0; color:var(--muted); font-size:.98rem; }
 
     /* ================= Popular Cards ================= */
-    .grid{ display:grid; gap:16px; }
-    .grid.popular{ grid-template-columns:repeat(1,minmax(0,1fr)); }
-    @media (min-width:640px){ .grid.popular{ grid-template-columns:repeat(2,1fr); } }
-    @media (min-width:992px){ .grid.popular{ grid-template-columns:repeat(3,1fr); } }
-
     .card{
       background:var(--surface); border:1px solid #eef2f9; border-radius:var(--radius-xl); overflow:hidden;
       box-shadow: var(--shadow); transition:transform .25s, box-shadow .25s, border-color .25s;
@@ -140,9 +132,9 @@
     }
     .card:hover{ transform:translateY(-4px); box-shadow:0 18px 42px rgba(51,102,255,.14); border-color:#dfe7ff; }
     .card .thumb{ aspect-ratio:4/3; width:100%; object-fit:cover; display:block; }
-    .card .body{ padding:16px 18px 20px; }
-    .card .title{ font-weight:900; color:var(--ink); margin:0 0 4px; letter-spacing:.2px; }
-    .card .muted{ color:var(--muted); }
+    .card .body{ padding:12px 14px 16px; }
+    .card .title{ font-weight:900; color:var(--ink); margin:0 0 4px; font-size:.95rem; }
+    .card .muted{ color:var(--muted); font-size:.8rem; }
     .card::before{
       content:""; position:absolute; top:12px; right:12px; width:34px; height:10px; border-radius:999px;
       background:linear-gradient(90deg,var(--accent),var(--primary)); opacity:.9;
@@ -168,10 +160,88 @@
     .hero .swiper-pagination,
     .hero .swiper-button-next,
     .hero .swiper-button-prev {
-    display: none !important;
+      display: none !important;
+    }
+
+    /* ================= Popular Slider ================= */
+    #popular.section {
+      padding-top: 32px;
+      padding-bottom: 24px;  /* spasi normal ke footer */
+      margin-bottom: 0;
+    }
+    #popular .section__title { margin-bottom: .4rem; }
+    #popular .section__lead { margin-bottom: 1rem; }
+
+    .popular-wrapper {
+      position: relative;
+      padding: 0 40px;
+      margin-top: 12px;
+    }
+    .popular-swiper {
+      padding-bottom: 0 !important;
+    }
+    .popular-swiper .swiper-wrapper {
+      margin-bottom: 0 !important;
+    }
+    .popular-swiper .swiper-slide {
+      width: 240px !important;
+      height: auto !important;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* biar card nempel atas */
+    }
+
+    .card.small {
+      max-width: 240px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      height: auto !important;   /* <— perbaikan inti */
+    }
+    .card.small .thumb {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .popular-prev, .popular-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+      display: grid; place-items: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all .25s;
+      color: var(--primary);
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .popular-prev:hover, .popular-next:hover {
+      background: var(--primary); color: #fff;
+    }
+    .popular-prev { left: 0; }
+    .popular-next { right: 0; }
+
+    .card.small { height: auto !important; }
+    .popular-swiper .swiper-slide { align-items: flex-start; }
+
+    /* Footer langsung setelah popular */
+    footer {
+      margin-top: 0 !important;
+      padding-top: 20px; /* supaya ada sedikit ruang */
     }
   </style>
 @endpush
+
+
 
 
 @section('content')
@@ -266,25 +336,35 @@
       <div class="section__eyebrow"><i class="bx bxs-hot"></i> Rekomendasi</div>
       <h2 class="section__title">Destinasi Favorit Wisatawan</h2>
       <p class="section__lead">Dipilih dari destinasi yang paling banyak dilihat dan diulas baik.</p>
-
-      <div class="grid popular" style="margin-top:22px;">
-        @foreach ($travel_packages as $package)
-          @php
-            $cover = optional($package->galleries->first())->images;
-            $src   = $cover ? Storage::url($cover) : asset('frontend/assets/img/hero.jpg');
-          @endphp
-          <article class="card" data-aos="fade-up">
-            <a href="{{ route('travel_package.show', $package->slug) }}" class="stretched-link" aria-label="Buka {{ $package->name ?? 'Paket' }}"></a>
-            <img class="thumb lazy" data-src="{{ $src }}" alt="{{ $package->name ?? 'Foto' }}">
-            <div class="body">
-              <div class="title">{{ $package->name ?? $package->location ?? '-' }}</div>
-              <div class="muted">{{ $package->type }}</div>
-            </div>
-          </article>
-        @endforeach
+  
+      <div class="popular-wrapper">
+        <div class="swiper popular-swiper">
+          <div class="swiper-wrapper">
+            @foreach ($travel_packages->take(9) as $package)
+              @php
+                $cover = optional($package->galleries->first())->images;
+                $src   = $cover ? Storage::url($cover) : asset('frontend/assets/img/hero.jpg');
+              @endphp
+              <div class="swiper-slide">
+                <article class="card small" data-aos="fade-up">
+                  <a href="{{ route('travel_package.show', $package->slug) }}" class="stretched-link"></a>
+                  <img class="thumb lazy" data-src="{{ $src }}" alt="{{ $package->name ?? 'Foto' }}">
+                  <div class="body">
+                    <div class="title">{{ $package->name ?? $package->location ?? '-' }}</div>
+                    <div class="muted">{{ $package->type }}</div>
+                  </div>
+                </article>
+              </div>
+            @endforeach
+          </div>
+        </div>
+        <!-- Tombol Navigasi -->
+        <div class="popular-prev"><i class="bx bx-chevron-left"></i></div>
+        <div class="popular-next"><i class="bx bx-chevron-right"></i></div>
       </div>
     </div>
   </section>
+  
 @endsection
 
 
@@ -332,5 +412,20 @@
         });
       });
     });
+
+    const popularSwiper = new Swiper('.popular-swiper', {
+      slidesPerView: 1,
+      spaceBetween: 16,
+      navigation: {
+        nextEl: '.popular-next',
+        prevEl: '.popular-prev',
+      },
+      breakpoints: {
+        640: { slidesPerView: 2 },
+        992: { slidesPerView: 3 }
+      }
+    });
+
+
   </script>
 @endpush
