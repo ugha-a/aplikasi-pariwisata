@@ -14,22 +14,18 @@ class BookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'travel_package_id' => ['required','exists:travel_packages,id'],
-
-            'name'          => ['required','string','max:100'],
-            'email'         => ['required','email'],
-            'number_phone'  => ['required','string','max:30'],
-
-            'date'          => ['required','date'],
-            'check_in'      => ['required','date_format:H:i'],
-            'check_out'     => ['required','date_format:H:i'],
-
-            // tambahan untuk pembayaran
-            // 'payment_method' => ['required','in:bank,ewallet'],
-            'file'  => ['required','image','mimes:jpg,jpeg,png','max:5120'], // <= 5MB
-
-            // Jika kamu juga kirim field lain, tambah di sini
+            'travel_package_id' => ['required','integer'],
+            'name'             => ['required','string','max:255'],
+            'email'            => ['required','email'],
+            'number_phone'     => ['required','string','max:30'],
+            'date'             => ['required','date'],
+            'check_in'         => ['required'],
+            'check_out'        => ['required'],
+            'payment_method'   => ['nullable','in:bank,ewallet'],
+            // ini nama input di form modal
+            'file'             => ['required','image','mimes:jpg,jpeg,png','max:10240'], // 10MB
         ];
+
     }
 
     public function messages(): array
