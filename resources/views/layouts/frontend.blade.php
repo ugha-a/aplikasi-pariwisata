@@ -138,6 +138,58 @@
       display:flex; justify-content:space-between; align-items:center; gap:16px; font-size:.9rem; color:#666;
     }
     @media (max-width:768px){ footer.footer--nusantara .footer__bottom{ flex-direction:column; text-align:center; } }
+
+    /* ================= NAVBAR HOVER EFFECTS ================= */
+    .nav__list{
+      display:flex; align-items:center; gap:8px;
+      margin:0; padding:0; list-style:none;
+    }
+
+    .nav__link{
+      position:relative;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:12px;
+      color:#1f2937; text-decoration:none; font-weight:600;
+      transition: color .2s ease, background-color .2s ease, transform .2s ease;
+    }
+
+    /* underline gradasi animasi */
+    .nav__link::after{
+      content:""; position:absolute; left:12px; right:12px; bottom:6px; height:3px;
+      background:linear-gradient(90deg,var(--accent-color),var(--primary-color));
+      border-radius:999px;
+      transform:scaleX(0); transform-origin:left; transition:transform .28s ease;
+    }
+
+    /* hover */
+    .nav__link:hover{
+      color:var(--primary-color);
+      background:rgba(51,102,255,.08);
+    }
+    .nav__link:hover::after{ transform:scaleX(1); }
+    .nav__link .bx{ transition:transform .25s ease; }
+    .nav__link:hover .bx{ transform:translateY(-1px); }
+
+    /* active (halaman saat ini) */
+    .nav__link.active-link{
+      color:var(--primary-color);
+      background:rgba(51,102,255,.10);
+    }
+    .nav__link.active-link::after{ transform:scaleX(1); }
+
+    /* focus keyboard (aksesibilitas) */
+    .nav__link:focus-visible{
+      outline:none;
+      box-shadow:0 0 0 3px rgba(51,102,255,.30);
+    }
+
+    /* sentuhan kecil saat diklik */
+    .nav__link:active{ transform:translateY(1px); }
+
+    /* hormati preferensi pengguna */
+    @media (prefers-reduced-motion: reduce){
+      .nav__link, .nav__link::after, .nav__link .bx{ transition:none !important; }
+    }
   </style>
 </head>
 
