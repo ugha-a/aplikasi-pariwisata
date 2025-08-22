@@ -22,7 +22,7 @@ class LocationController extends Controller
      */
     public function create()
     {
-        return view('admin.locations.create', compact('users'));
+        return view('admin.locations.create');
     }
 
     /**
@@ -50,8 +50,7 @@ class LocationController extends Controller
      */
     public function edit(Location $location)
     {
-        $users = User::where('role', 'dinas')->get();
-        return view('admin.locations.edit', compact('location', 'users'));
+        return view('admin.locations.edit', compact('location'));
     }
 
     /**
