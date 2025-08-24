@@ -78,8 +78,8 @@
         </article>
 
         @php
-          $lat = $travel_package->lat ?? $travel_package->latitude ?? -3.9917;
-          $lng = $travel_package->lng ?? $travel_package->longitude ?? 122.5120;
+          $lat = $travel_package->locations->lat ?? -3.9917;
+          $lng = $travel_package->locations->lag ?? 122.5120;
           $locName = optional($travel_package->locations)->name ?? 'Lokasi';
         @endphp
 
@@ -88,7 +88,7 @@
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h3 class="card-title m-0">Lokasi</h3>
             <a target="_blank"
-               href="https://www.google.com/maps/search/?api=1&query={{ $lat }},{{ $lng }}"
+               href="{{ $travel_package->locations->link_maps ?? "https://www.google.com/maps/search/?api=1&query=$lat,$lng" }}"
                class="small-link">Buka di Google Maps →</a>
           </div>
           <div id="miniMap"></div>

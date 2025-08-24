@@ -41,7 +41,7 @@
                   @if($slides->count())
                     @foreach($slides as $g)
                       <div class="swiper-slide">
-                        <img src="{{ asset('storage/'.$g->image) }}" alt="{{ $tp->location }}">
+                        <img src="{{ Storage::url($g->images) }}" alt="{{ $tp->location }}">
                       </div>
                     @endforeach
                   @else
