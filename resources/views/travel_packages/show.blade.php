@@ -88,7 +88,7 @@
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h3 class="card-title m-0">Lokasi</h3>
             <a target="_blank"
-               href="{{ $travel_package->locations->link_maps ?? "https://www.google.com/maps/search/?api=1&query=$lat,$lng" }}"
+               href="{{ $travel_package->link_maps ?? "https://www.google.com/maps/search/?api=1&query=$lat,$lng" }}"
                class="small-link">Buka di Google Maps →</a>
           </div>
           <div id="miniMap"></div>

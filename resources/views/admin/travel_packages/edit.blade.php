@@ -109,7 +109,7 @@
             @method('put')
 
             {{-- NAMA --}}
-            <div class="form-group col-12">
+            <div class="form-group col-6">
               <label class="lbl" for="tp_name">Nama <span class="req">*</span></label>
               <div class="input-group input-neo @error('name') has-error @enderror">
                 <div class="input-group-prepend">
@@ -170,6 +170,19 @@
               <small class="form-text text-muted">Ketik angka saja, otomatis jadi format Rupiah.</small>
               @error('price') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
+
+            <div class="form-group col-md-6">
+                <label class="lbl" for="link_maps">Link Maps <span class="req">*</span></label>
+                <div class="input-group input-neo @error('price') has-error @enderror">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class='fas fa-map-marker-alt'></i></span>
+                  </div>
+                  <input type="text" name="link_maps" id="link_maps"
+                          class="form-control" placeholder="Masukkan link maps"
+                          value="{{ old('link_maps', $travel_package->link_maps) }}" required>
+                </div>
+                @error('link_maps') <small class="text-danger">{{ $message }}</small> @enderror
+              </div>
 
             {{-- PENGELOLA (samakan struktur dengan create) --}}
             <div class="form-group col-md-6">
